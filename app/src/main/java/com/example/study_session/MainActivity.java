@@ -32,8 +32,7 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
-            Intent userInfo = new Intent();
-            startActivityForResult(userInfo, LoginActivity.EDIT_USER_INFO);
+            setContentView(R.layout.activity_main);
         }
     }
 }
