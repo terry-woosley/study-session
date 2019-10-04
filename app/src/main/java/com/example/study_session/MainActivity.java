@@ -9,9 +9,6 @@ import com.example.study_session.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int LOGIN_SUCCESS = 103;
-    public static final int LOGIN_ACTIVITY = 104;
-    public static final int EDIT_USER_INFO = 105;
 
 
     @Override
@@ -20,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent login = new Intent(this, LoginActivity.class);
-        startActivityForResult(login,LOGIN_ACTIVITY);
+        startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
     }
 
     /**
@@ -31,12 +28,12 @@ public class MainActivity extends AppCompatActivity {
      * @param profile the user profile information
      */
     public void onActivityResult(int requestCode,int resultCode,Intent profile){
-        if(resultCode == LOGIN_SUCCESS){
+        if(resultCode == LoginActivity.LOGIN_SUCCESS){
             setContentView(R.layout.activity_main);
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             Intent userInfo = new Intent();
-            startActivityForResult(userInfo, EDIT_USER_INFO);
+            startActivityForResult(userInfo, LoginActivity.EDIT_USER_INFO);
         }
     }
 }

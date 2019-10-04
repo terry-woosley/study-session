@@ -36,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     public static final int REGISTER_USER = 101;
     public static final int SUCCESSFUL_REGISTRATION = 102;
+    public static final int LOGIN_SUCCESS = 103;
+    public static final int LOGIN_ACTIVITY = 104;
+    public static final int EDIT_USER_INFO = 105;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void login(View view){
         Intent userLogin = new Intent();
-        setResult(MainActivity.LOGIN_SUCCESS, userLogin);
+        setResult(LOGIN_SUCCESS, userLogin);
         finish();
     }
 
