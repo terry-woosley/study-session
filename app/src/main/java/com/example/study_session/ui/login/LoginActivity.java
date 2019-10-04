@@ -28,13 +28,13 @@ import com.example.study_session.ui.login.LoginViewModel;
 import com.example.study_session.ui.login.LoginViewModelFactory;
 
 /**
- * Performs tha main logic for the Login activity 
+ * Performs tha main logic for the Login activity
  */
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
-    private static final int REGISTER_USER = 101;
-    private static final int SUCCESSFUL_REGISTRATION = 102;
+    public static final int REGISTER_USER = 101;
+    public static final int SUCCESSFUL_REGISTRATION = 102;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
