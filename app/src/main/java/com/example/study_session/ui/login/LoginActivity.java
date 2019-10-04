@@ -27,10 +27,14 @@ import com.example.study_session.R;
 import com.example.study_session.ui.login.LoginViewModel;
 import com.example.study_session.ui.login.LoginViewModelFactory;
 
+/**
+ * Performs tha main logic for the Login activity 
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private static final int REGISTER_USER = 101;
+    private static final int SUCCESSFUL_REGISTRATION = 102;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,18 +127,68 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Starts the RegisterNewUser activity
+     *
+     * @param view the screen View
+     */
     public void registerNewUser(View view){
         Intent registerIntent = new Intent(this, RegisterNewUser.class);
         startActivityForResult(registerIntent,REGISTER_USER);
     }
 
+    /**
+     * Destroys login and starts **** on successful user registration,
+     * and displays error message on failed registration
+     *
+     * @param requestCode the code the activity was started with
+     * @param resultCode the result of the activity
+     * @param data the intent from the activity
+     */
+    public void onActivityResult(int requestCode,int resultCode,Intent data){
+        if(resultCode == SUCCESSFUL_REGISTRATION){
+            //TODO destroy login and start app
+        }
+        else {
+            showRegistrationFail("Failed to Login");
+        }
+    }
+
+    /**
+     * Displays a welcome message to the user upon successful login
+     *
+     * @param model with the user's login information
+     */
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Prints a pop-up error message to the screen when Login fails
+     *
+     * @param errorString the error message to display to user
+     */
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Prints a pop-up error message to the screen when registration failes
+     *
+     * @param message the error message to display to user
+     */
+    private void showRegistrationFail(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Prints a pop-up error message to the screen
+     *
+     * @param message the error message to display to user
+     */
+    public void alertMessage(String message)
+    {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
