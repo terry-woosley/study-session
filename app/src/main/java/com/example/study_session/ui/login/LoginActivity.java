@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.study_session.MainActivity;
 import com.example.study_session.R;
 import com.example.study_session.ui.login.LoginViewModel;
 import com.example.study_session.ui.login.LoginViewModelFactory;
@@ -147,11 +148,18 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         if(resultCode == SUCCESSFUL_REGISTRATION){
-            //TODO destroy login and start app
+            setResult(SUCCESSFUL_REGISTRATION, data);
+            finish();
         }
         else {
-            showRegistrationFail("Failed to Login");
+            showRegistrationFail("Failed to create account");
         }
+    }
+
+    public void login(View view){
+        Intent userLogin = new Intent();
+        setResult(MainActivity.LOGIN_SUCCESS, userLogin);
+        finish();
     }
 
     /**
