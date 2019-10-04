@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.example.study_session.ui.login.LoginViewModelFactory;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private static final int REGISTER_USER = 101;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        final TextView signUp = findViewById(R.id.signUp);
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
             @Override
@@ -68,11 +71,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
                 }
-//                if (loginResult.getSuccess() != null) {
-//                    updateUiWithUser(loginResult.getSuccess());
-//                    //TODO
-//                }
-//                setResult(Activity.RESULT_OK);
+                if (loginResult.getSuccess() != null) {
+                    updateUiWithUser(loginResult.getSuccess());
+                    //TODO
+                }
+                setResult(Activity.RESULT_OK);
 
                 //Complete and destroy login activity once successful
                 finish();
@@ -120,11 +123,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-//    private void updateUiWithUser(LoggedInUserView model) {
-//        String welcome = getString(R.string.welcome) + model.getDisplayName();
-//        // TODO : initiate successful logged in experience
-//        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-//    }
+    public void registerNewUser(View view){
+        Intent registerIntent = new Intent(this, RegisterNewUser.class);
+        startActivityForResult(registerIntent,REGISTER_USER);
+    }
+
+    private void updateUiWithUser(LoggedInUserView model) {
+        String welcome = getString(R.string.welcome) + model.getDisplayName();
+        // TODO : initiate successful logged in experience
+        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+    }
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
