@@ -38,7 +38,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createGroup(View view){
-        Intent createGroup = new Intent(this,GroupCreate.class);
+        Intent createGroup = new Intent(this,GroupCreateActivity.class);
         startActivity(createGroup);
+    }
+
+    public void showProfile(View view){
+        Intent showProfile = new Intent(this,ProfileActivity.class);
+        startActivity(showProfile);
+    }
+
+    public void showGroupSearch(View view){
+        Intent showGroupSearch = new Intent(this,GroupSearchActivity.class);
+        startActivity(showGroupSearch);
+    }
+
+    public void showGroup(View view){
+        Intent showGroup = new Intent(this,GroupActivity.class);
+        startActivity(showGroup);
     }
 }
