@@ -11,4 +11,8 @@
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up">Sign Up</string>
     <string name="create_account">Create Account</string>
+    <string name="name">Name</string>
+    <string name="groups">Groups:</string>
+    <string name="school">School:</string>
+    <string name="times">Times:</string>
 </resources>
