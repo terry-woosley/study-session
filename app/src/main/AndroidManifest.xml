@@ -11,9 +11,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".GroupSearchActivity"></activity>
         <activity android:name=".GroupActivity" />
-        <activity android:name=".GroupCreate" />
-        <activity android:name=".ui.login.RegisterNewUser" />
-        <activity android:name=".GroupCreate" />
+        <activity android:name=".GroupCreateActivity" />
+        <activity android:name=".ProfileActivity" />
         <activity android:name=".ui.login.RegisterNewUser" />
         <activity
             android:name=".ui.login.LoginActivity"
