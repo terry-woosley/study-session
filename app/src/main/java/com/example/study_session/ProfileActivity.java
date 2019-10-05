@@ -27,5 +27,6 @@ public class ProfileActivity extends AppCompatActivity implements  View.OnClickL
     public void onClick(View view) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+
     }
 }
