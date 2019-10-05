@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GroupActivity"></activity>
-        <activity android:name=".ui.login.RegisterNewUser"></activity>
-        <activity android:name=".GroupCreate"></activity>
-        <activity android:name=".ui.login.RegisterNewUser" ></activity>
+
+        <activity android:name=".GroupSearchActivity"></activity>
+        <activity android:name=".GroupActivity" />
+        <activity android:name=".GroupCreateActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ui.login.RegisterNewUser" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />
