@@ -2,6 +2,7 @@ package com.example.study_session.ui.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -17,6 +18,8 @@ public class RegisterNewUser extends AppCompatActivity {
 
     public void registerUser(View view){
         //TODO add logic for creating and validating user
-        setResult(LoginActivity.SUCCESSFUL_REGISTRATION);
+        Intent user = new Intent();
+        setResult(LoginActivity.SUCCESSFUL_REGISTRATION, user);
+        finish();
     }
 }
