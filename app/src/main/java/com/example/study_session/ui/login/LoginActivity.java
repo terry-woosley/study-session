@@ -23,10 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.study_session.MainActivity;
 import com.example.study_session.R;
-import com.example.study_session.ui.login.LoginViewModel;
-import com.example.study_session.ui.login.LoginViewModelFactory;
 
 /**
  * Performs tha main logic for the Login activity
@@ -47,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
+        final EditText usernameEditText = findViewById(R.id.emailView);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
