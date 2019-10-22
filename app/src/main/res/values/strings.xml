@@ -16,4 +16,5 @@
     <string name="groups">Groups:</string>
     <string name="school">School:</string>
     <string name="times">Times:</string>
+    <string name="emailLabel">Email:</string>
 </resources>

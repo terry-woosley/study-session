@@ -10,21 +10,18 @@ import android.widget.Button;
 
 
 
-public class ProfileActivity extends AppCompatActivity implements  View.OnClickListener {
+public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        Button backToMain = findViewById(R.id.backToMain);
-        backToMain.setOnClickListener(this);
-
     }
 
-
-    @Override
-    public void onClick(View view) {
+    public void showMain(View view) {
         finish();
     }
+
+
 }
