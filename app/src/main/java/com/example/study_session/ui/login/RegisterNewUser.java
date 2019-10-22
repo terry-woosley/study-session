@@ -3,12 +3,15 @@ package com.example.study_session.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.study_session.MainActivity;
@@ -33,6 +36,7 @@ public class RegisterNewUser extends AppCompatActivity {
     private String password;
     private String email;
     private FirebaseAuth mAuth;
+    private ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class RegisterNewUser extends AppCompatActivity {
         setContentView(R.layout.activity_register_new_user);
         emailView = findViewById(R.id.emailView);
         passwordView = findViewById(R.id.password);
+        spinner = findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -57,9 +63,9 @@ public class RegisterNewUser extends AppCompatActivity {
                     passwordView.setError(getString(R.string.invalid_password));
                 }
                 else {
+                    spinner.setVisibility(View.VISIBLE);
                     createAccount(email,password);
                 }
-                //TODO fix me
             }
         });
 
@@ -74,19 +80,16 @@ public class RegisterNewUser extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("CreateTag", "createUserWithEmail:success");
+                            spinner.setVisibility(View.GONE);
+                            Log.d("CreateUser", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
+                            spinner.setVisibility(View.GONE);
                             Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
-                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
-                            //        Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+                            Toast.makeText(getApplicationContext(),"Failed to create account.",
+                                    Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
 
