@@ -6,8 +6,8 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_username">Not a valid email address</string>
+    <string name="invalid_password">Password must be >10 characters and contain a number, a special character, lowercase and an uppercase letter</string>
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up">Sign Up</string>
     <string name="create_account">Create Account</string>

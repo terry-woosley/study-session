@@ -11,11 +11,19 @@ import com.example.study_session.data.Result;
 import com.example.study_session.data.model.LoggedInUser;
 import com.example.study_session.R;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
+
+    private static final String PASSWORD_REGEX =
+            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile(PASSWORD_REGEX);
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
@@ -42,7 +50,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void loginDataChanged(String username, String password) {
-        if (!isUserNameValid(username)) {
+        if (!isEmailValid(username)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
             loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
@@ -52,20 +60,25 @@ public class LoginViewModel extends ViewModel {
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username) {
-        if (username == null) {
+    private boolean isEmailValid(String email) {
+        if (email == null) {
             return false;
         }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
+        if (!email.contains("@")) {
+            return false;
+        }
+        else {
+            return !email.trim().isEmpty();
         }
     }
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
+        if (!(PASSWORD_PATTERN.matcher(password).matches())){
+            return false;
+        }
+
+        return true;
         //TODO add password validation
     }
 }
