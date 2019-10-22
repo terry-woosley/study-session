@@ -7,13 +7,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.study_session.MainActivity;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Pattern;
 
@@ -23,67 +28,83 @@ public class RegisterNewUser extends AppCompatActivity {
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);
+    private EditText emailView;
+    private EditText passwordView;
+    private String password;
+    private String email;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
+        emailView = findViewById(R.id.emailView);
+        passwordView = findViewById(R.id.password);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        final Button createAccount = findViewById(R.id.createBTN);
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                email = emailView.getText().toString();
+                password = passwordView.getText().toString();
+                if (!isEmailValid(email)){
+                    emailView.setError(getString(R.string.invalid_email));
+                }
+                else if (!isPasswordValid(password)){
+                    passwordView.setError(getString(R.string.invalid_password));
+                }
+                else {
+                    createAccount(email,password);
+                }
+                //TODO fix me
+            }
+        });
+
+
     }
 
-    public void registerUser(View view){
+    public void createAccount(String email, String password){
         //TODO add logic for creating and validating user
 
-        ActionCodeSettings actionCodeSettings =
-                ActionCodeSettings.newBuilder()
-                        // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be whitelisted in the Firebase Console.
-                        //.setUrl("https://www.example.com/finishSignUp?cartId=1234")
-                        // This must be true
-                        .setHandleCodeInApp(true)
-                        .setAndroidPackageName(
-                                "com.example.android",
-                                true, /* installIfNotAvailable */
-                                "12"    /* minimumVersion */)
-                        .build();
-
-        EditText emailView = findViewById(R.id.emailView);
-        String email = emailView.getText().toString();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.sendSignInLinkToEmail(email, actionCodeSettings)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d("EMAIL", "Email sent.");
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("CreateTag", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
+                            //Toast.makeText(EmailPasswordActivity.this, "Authentication failed.",
+                            //        Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
                         }
+
+                        // ...
                     }
                 });
 
-        Intent user = new Intent();
-        setResult(LoginActivity.SUCCESSFUL_REGISTRATION, user);
-        finish();
+
+
     }
 
 
     // A placeholder password validation check
-    private boolean isPasswordValid(String password) {
-        if (!(PASSWORD_PATTERN.matcher(password).matches())){
-            return false;
-        }
-
-        return true;
+    private static boolean isPasswordValid(String password) {
+        return (PASSWORD_PATTERN.matcher(password).matches());
     }
 
     // A placeholder username validation check
-    private boolean isEmailValid(String email) {
+    private static boolean isEmailValid(String email) {
         if (email == null) {
             return false;
         }
-        if (!email.contains("@")) {
-            return false;
-        }
-        else {
-            return !email.trim().isEmpty();
-        }
+        return (email.contains("@") && email.contains(".com"));
     }
 }
