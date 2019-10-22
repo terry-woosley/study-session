@@ -10,6 +10,7 @@
     <string name="invalid_password">Password must be >10 characters and contain a number, a special character, lowercase and an uppercase letter</string>
     <string name="login_failed">"Login failed"</string>
     <string name="sign_up">Sign Up</string>
+    <string name="field_empty">Field empty</string>
     <string name="create_account">Create Account</string>
     <string name="name">Name</string>
     <string name="groups">Groups:</string>

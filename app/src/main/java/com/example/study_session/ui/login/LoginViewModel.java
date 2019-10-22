@@ -20,11 +20,6 @@ public class LoginViewModel extends ViewModel {
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
 
-    private static final String PASSWORD_REGEX =
-            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
-    private static final Pattern PASSWORD_PATTERN =
-            Pattern.compile(PASSWORD_REGEX);
-
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
     }
@@ -51,9 +46,9 @@ public class LoginViewModel extends ViewModel {
 
     public void loginDataChanged(String username, String password) {
         if (!isEmailValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+            loginFormState.setValue(new LoginFormState(R.string.field_empty, null));
         } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+            loginFormState.setValue(new LoginFormState(null, R.string.field_empty));
         } else {
             loginFormState.setValue(new LoginFormState(true));
         }
@@ -64,9 +59,6 @@ public class LoginViewModel extends ViewModel {
         if (email == null) {
             return false;
         }
-        if (!email.contains("@")) {
-            return false;
-        }
         else {
             return !email.trim().isEmpty();
         }
@@ -74,10 +66,9 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        if (!(PASSWORD_PATTERN.matcher(password).matches())){
+        if (password == null){
             return false;
         }
-
         return true;
         //TODO add password validation
     }
