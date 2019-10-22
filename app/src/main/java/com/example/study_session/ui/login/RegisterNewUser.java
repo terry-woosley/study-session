@@ -15,7 +15,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Pattern;
+
 public class RegisterNewUser extends AppCompatActivity {
+
+    private static final String PASSWORD_REGEX =
+            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile(PASSWORD_REGEX);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +62,28 @@ public class RegisterNewUser extends AppCompatActivity {
         Intent user = new Intent();
         setResult(LoginActivity.SUCCESSFUL_REGISTRATION, user);
         finish();
+    }
+
+
+    // A placeholder password validation check
+    private boolean isPasswordValid(String password) {
+        if (!(PASSWORD_PATTERN.matcher(password).matches())){
+            return false;
+        }
+
+        return true;
+    }
+
+    // A placeholder username validation check
+    private boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        }
+        if (!email.contains("@")) {
+            return false;
+        }
+        else {
+            return !email.trim().isEmpty();
+        }
     }
 }
