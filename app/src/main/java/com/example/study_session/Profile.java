@@ -5,5 +5,5 @@ public class Profile {
     String school;
     Group[] groups;
     //Maybe consider changing the type to something more fitting
-    Float timesAvailable;
+    Float[] timesAvailable;
 }
