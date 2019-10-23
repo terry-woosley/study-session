@@ -6,9 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.study_session.R;
@@ -20,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Pattern;
 
-public class RegisterNewUser extends AppCompatActivity {
+public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String PASSWORD_REGEX =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
@@ -31,6 +34,7 @@ public class RegisterNewUser extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressBar spinner;
     private EditText userView;
+    private Spinner schoolSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,15 @@ public class RegisterNewUser extends AppCompatActivity {
         emailView = findViewById(R.id.emailView);
         passwordView = findViewById(R.id.passwordView);
         spinner = findViewById(R.id.progressBar);
+        schoolSpinner = findViewById(R.id.schoolDropDown);
         spinner.setVisibility(View.GONE);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.schools_array, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        schoolSpinner.setAdapter(adapter);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -92,16 +104,24 @@ public class RegisterNewUser extends AppCompatActivity {
     }
 
 
-    // A placeholder password validation check
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
     }
 
-    // A placeholder username validation check
     private static boolean isEmailValid(String email) {
         if (email == null) {
             return false;
         }
         return (email.contains("@") && email.contains(".com"));
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
     }
 }
