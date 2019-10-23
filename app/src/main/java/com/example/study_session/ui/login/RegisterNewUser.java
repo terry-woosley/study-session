@@ -3,22 +3,17 @@ package com.example.study_session.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.study_session.MainActivity;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,17 +28,16 @@ public class RegisterNewUser extends AppCompatActivity {
             Pattern.compile(PASSWORD_REGEX);
     private EditText emailView;
     private EditText passwordView;
-    private String password;
-    private String email;
     private FirebaseAuth mAuth;
     private ProgressBar spinner;
+    private EditText userView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_new_user);
         emailView = findViewById(R.id.emailView);
-        passwordView = findViewById(R.id.password);
+        passwordView = findViewById(R.id.passwordView);
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
 
@@ -54,8 +48,8 @@ public class RegisterNewUser extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                email = emailView.getText().toString();
-                password = passwordView.getText().toString();
+                String email = emailView.getText().toString();
+                String password = passwordView.getText().toString();
                 if (!isEmailValid(email)){
                     emailView.setError(getString(R.string.invalid_email));
                 }
@@ -73,7 +67,7 @@ public class RegisterNewUser extends AppCompatActivity {
     }
 
     public void createAccount(String email, String password){
-        //TODO add logic for creating and validating user
+        //TODO add logic for validating user email
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
