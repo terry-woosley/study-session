@@ -4,6 +4,12 @@
         <item>Northwest Missouri State University</item>
         <item>Missouri Western State University</item>
         <item>University of Missouri</item>
+        <item>University of Missouri–Kansas City</item>
+        <item>Missouri University of Science and Technology</item>
+        <item>University of Missouri–St. Louis</item>
+        <item>Missouri State University</item>
+        <item>Southeast Missouri State University</item>
+        <item>University of Central Missouri</item>
     </string-array>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">Email</string>
