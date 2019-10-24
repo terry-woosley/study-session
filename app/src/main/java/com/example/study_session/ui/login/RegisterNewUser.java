@@ -35,6 +35,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private ProgressBar spinner;
     private EditText userView;
     private Spinner schoolSpinner;
+    private String userSchool;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         spinner = findViewById(R.id.progressBar);
         schoolSpinner = findViewById(R.id.schoolDropDown);
         spinner.setVisibility(View.GONE);
+        userView = findViewById(R.id.nameVIew);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
@@ -52,6 +55,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         schoolSpinner.setAdapter(adapter);
+        schoolSpinner.setOnItemSelectedListener(this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -60,17 +64,26 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
 
-                String email = emailView.getText().toString();
-                String password = passwordView.getText().toString();
-                if (!isEmailValid(email)){
-                    emailView.setError(getString(R.string.invalid_email));
+                try {
+                    String email = emailView.getText().toString();
+                    String password = passwordView.getText().toString();
+                    userName = userView.getText().toString();
+
+                    if (!isEmailValid(email)) {
+                        emailView.setError(getString(R.string.invalid_email));
+                    } else if (!isPasswordValid(password)) {
+                        passwordView.setError(getString(R.string.invalid_password));
+                    } else if (userSchool == null) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.empty_school), Toast.LENGTH_SHORT).show();
+                    } else if (userName == null) {
+                        userView.setError(getString(R.string.empty_username));
+                    } else {
+                        spinner.setVisibility(View.VISIBLE);
+                        createAccount(email, password);
+                    }
                 }
-                else if (!isPasswordValid(password)){
-                    passwordView.setError(getString(R.string.invalid_password));
-                }
-                else {
-                    spinner.setVisibility(View.VISIBLE);
-                    createAccount(email,password);
+                catch (NullPointerException e){
+                    System.out.println("OOPS");
                 }
             }
         });
@@ -117,10 +130,10 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
+        userSchool = parent.getItemAtPosition(pos).toString();
     }
 
+    //This is only here to not make the interface call angry
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
