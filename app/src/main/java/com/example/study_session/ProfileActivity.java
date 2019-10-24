@@ -19,6 +19,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    public void populateProfie(){
+        //get name from database
+        //get email from database
+        //get profile pic from database
+        //get times from database
+        //get groups from database
+    }
+
     public void showMain(View view) {
         finish();
     }
