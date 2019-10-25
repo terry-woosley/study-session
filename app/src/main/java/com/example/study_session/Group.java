@@ -4,11 +4,16 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,5 +59,30 @@ public class Group {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+    }
+    
+    public ArrayList<Group> getGroupsFromUniversity(final String school){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<Group> groupArrayList= new ArrayList<Group>();
+        db.collection("groups")
+                .whereEqualTo("groupSchool", school)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String groupName = (String) document.get("groupName");
+                                String groupCreator = (String) document.get("creator");
+                                String groupSubject = (String) document.get("subject");
+                                groupArrayList.add(new Group(groupName, school, groupCreator,null,null,groupSubject));
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        return groupArrayList;
     }
 }
