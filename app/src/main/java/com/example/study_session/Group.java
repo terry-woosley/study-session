@@ -54,11 +54,5 @@ public class Group {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
-        // Create a new user with a first, middle, and last name
-        Map<String, Object> user = new HashMap<>();
-        user.put("first", "Alan");
-        user.put("middle", "Mathison");
-        user.put("last", "Turing");
-        user.put("born", 1912);
     }
 }
