@@ -7,6 +7,14 @@ public class Profile {
     //Maybe consider changing the type to something more fitting
     Date[] timesAvailable;
 
+    public Profile() {
+    }
+
+    public Profile(String name, String school) {
+        this.name = name;
+        this.school = school;
+    }
+
     /**
      * Default getter for userName
      *

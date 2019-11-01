@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
@@ -32,6 +34,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private EditText emailView;
     private EditText passwordView;
     private FirebaseAuth mAuth;
+    //private DatabaseReference mDatabase;
     private ProgressBar spinner;
     private EditText userView;
     private Spinner schoolSpinner;
@@ -101,7 +104,11 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         if (task.isSuccessful()) {
                             spinner.setVisibility(View.GONE);
                             Log.d("CreateUser", "createUserWithEmail:success");
+
+                            //mDatabase = FirebaseDatabase.getInstance().getReference();
                             FirebaseUser user = mAuth.getCurrentUser();
+
+
                             //updateUI(user);
                         } else {
                             spinner.setVisibility(View.GONE);
@@ -111,9 +118,6 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         }
                     }
                 });
-
-
-
     }
 
 
