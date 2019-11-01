@@ -34,7 +34,6 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private EditText emailView;
     private EditText passwordView;
     private FirebaseAuth mAuth;
-    //private DatabaseReference mDatabase;
     private ProgressBar spinner;
     private EditText userView;
     private Spinner schoolSpinner;
