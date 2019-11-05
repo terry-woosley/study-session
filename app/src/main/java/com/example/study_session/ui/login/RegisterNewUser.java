@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final String PASSWORD_REGEX =
+    public static final String PASSWORD_REGEX =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);

@@ -9,34 +9,38 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.study_session.R;
+import java.util.regex.Pattern;
 
 /**
  * Performs tha main logic for the Login activity
  */
 public class LoginActivity extends AppCompatActivity {
 
+    public static final String PASSWORD_REGEX =
+            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile(PASSWORD_REGEX);
     public static final int REGISTER_USER = 101;
     public static final int SUCCESSFUL_REGISTRATION = 102;
     public static final int LOGIN_SUCCESS = 103;
     public static final int LOGIN_ACTIVITY = 104;
     public static final int EDIT_USER_INFO = 105;
+    private EditText userEmailText, passwordText;
+    private Button loginButton;
+    private ProgressBar loadingProgressBar;
+    String email,password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText usernameEditText = findViewById(R.id.emailView);
-        final EditText passwordEditText = findViewById(R.id.passwordView);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-        final TextView signUp = findViewById(R.id.signUp);
-
-
+        userEmailText = findViewById(R.id.emailView);
+        passwordText = findViewById(R.id.passwordView);
+        loginButton = findViewById(R.id.login);
+        loadingProgressBar = findViewById(R.id.loading);
     }
 
     /**
@@ -70,9 +74,32 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginUser(View view){
-        Intent userLogin = new Intent();
-        setResult(LOGIN_SUCCESS, userLogin);
-        finish();
+
+        try {
+            email = userEmailText.getText().toString();
+        }
+        catch (NullPointerException e){
+            userEmailText.setError("Please enter an email address");
+            return;
+        }
+        try {
+            password = passwordText.getText().toString();
+        }
+        catch (NullPointerException e){
+            passwordText.setError("Please enter a password");
+            return;
+        }
+
+        if (!isEmailValid(email)) {
+            userEmailText.setError(getString(R.string.invalid_email));
+        } else if (!isPasswordValid(password)) {
+            passwordText.setError(getString(R.string.invalid_password));
+        }
+        else {
+            Intent userLogin = new Intent();
+            setResult(LOGIN_SUCCESS, userLogin);
+            finish();
+        }
     }
 
     /**
@@ -101,6 +128,17 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void showRegistrationFail(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private static boolean isPasswordValid(String password) {
+        return (PASSWORD_PATTERN.matcher(password).matches());
+    }
+
+    private static boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        }
+        return (email.contains("@") && email.contains(".com"));
     }
 
 }
