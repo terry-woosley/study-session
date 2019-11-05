@@ -3,6 +3,7 @@ package com.example.study_session.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,14 +33,11 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);
-    private EditText emailView;
-    private EditText passwordView;
+    private EditText emailView,passwordView,userView;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private ProgressBar spinner;
-    private EditText userView;
-    private String userSchool;
-    private String userName;
+    private String userSchool,userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +52,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
         schoolSpinner.setAdapter(adapter);
         schoolSpinner.setOnItemSelectedListener(this);
 
@@ -108,8 +104,11 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             mDatabase = FirebaseDatabase.getInstance().getReference().child(user.getUid());
                             Profile profile = new Profile(userName,userSchool);
                             mDatabase.push().setValue(profile);
-
-                            //updateUI(user);
+                            Intent successIntent = new Intent();
+                            successIntent.putExtra("userName", userName);
+                            successIntent.putExtra("userSchool", userSchool);
+                            setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
+                            finish();
                         } else {
                             spinner.setVisibility(View.GONE);
                             Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
@@ -119,8 +118,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }
                 });
     }
-
-
+    
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
     }
