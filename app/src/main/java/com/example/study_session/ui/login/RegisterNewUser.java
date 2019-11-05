@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.study_session.Profile;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,9 +35,9 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private EditText emailView;
     private EditText passwordView;
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     private ProgressBar spinner;
     private EditText userView;
-    private Spinner schoolSpinner;
     private String userSchool;
     private String userName;
 
@@ -47,7 +48,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         emailView = findViewById(R.id.emailView);
         passwordView = findViewById(R.id.passwordView);
         spinner = findViewById(R.id.progressBar);
-        schoolSpinner = findViewById(R.id.schoolDropDown);
+        Spinner schoolSpinner = findViewById(R.id.schoolDropDown);
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
 
@@ -103,10 +104,10 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         if (task.isSuccessful()) {
                             spinner.setVisibility(View.GONE);
                             Log.d("CreateUser", "createUserWithEmail:success");
-
-                            //mDatabase = FirebaseDatabase.getInstance().getReference();
                             FirebaseUser user = mAuth.getCurrentUser();
-
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+                            Profile profile = new Profile(userName,userSchool);
+                            mDatabase.push().setValue(profile);
 
                             //updateUI(user);
                         } else {
