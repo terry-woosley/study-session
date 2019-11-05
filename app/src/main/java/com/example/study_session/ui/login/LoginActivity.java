@@ -149,6 +149,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         if(resultCode == SUCCESSFUL_REGISTRATION){
+            String welcome = getString(R.string.welcome) + data.getStringExtra("userName");
+            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
             setResult(SUCCESSFUL_REGISTRATION, data);
             finish();
         }
@@ -191,13 +193,4 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Prints a pop-up error message to the screen
-     *
-     * @param message the error message to display to user
-     */
-    public void alertMessage(String message)
-    {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 }

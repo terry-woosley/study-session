@@ -101,12 +101,13 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             spinner.setVisibility(View.GONE);
                             Log.d("CreateUser", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child(user.getUid());
+                            mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
                             Profile profile = new Profile(userName,userSchool);
                             mDatabase.push().setValue(profile);
                             Intent successIntent = new Intent();
                             successIntent.putExtra("userName", userName);
                             successIntent.putExtra("userSchool", userSchool);
+                            successIntent.putExtra("UID", user.getUid());
                             setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
                             finish();
                         } else {
@@ -118,7 +119,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }
                 });
     }
-    
+
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
     }
