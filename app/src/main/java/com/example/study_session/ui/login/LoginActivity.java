@@ -3,14 +3,24 @@ package com.example.study_session.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.study_session.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.regex.Pattern;
 
 /**
@@ -27,10 +37,11 @@ public class LoginActivity extends AppCompatActivity {
     public static final int LOGIN_SUCCESS = 103;
     public static final int LOGIN_ACTIVITY = 104;
     public static final int EDIT_USER_INFO = 105;
+    private FirebaseAuth mAuth;
     private EditText userEmailText, passwordText;
     private Button loginButton;
     private ProgressBar loadingProgressBar;
-    String email,password;
+    private String email,password;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,9 +107,29 @@ public class LoginActivity extends AppCompatActivity {
             passwordText.setError(getString(R.string.invalid_password));
         }
         else {
-            Intent userLogin = new Intent();
-            setResult(LOGIN_SUCCESS, userLogin);
-            finish();
+
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("SignIn", "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Intent userLogin = new Intent();
+                                setResult(LOGIN_SUCCESS, userLogin);
+                                finish();
+                                //updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("SignIn", "signInWithEmail:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                //updateUI(null);
+                            }
+                        }
+                    });
         }
     }
 
