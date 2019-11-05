@@ -82,7 +82,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }
                 }
                 catch (NullPointerException e){
-                    System.out.println("OOPS");
+                    System.out.println("Please complete all fields");
                 }
             }
         });
