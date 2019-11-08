@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         if (sp.contains("isChecked")){
             if (sp.getBoolean("isChecked", false))
             restoreSharedPreferences(findViewById(R.id.container));
-            //TODO extract database calls
+            logUserIn(email, password);
         }
 
         userEmailText.addTextChangedListener(new TextWatcher() {
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void loginUser(View view){
+    public void signIn(View view){
 
         try {
             email = userEmailText.getText().toString();
@@ -162,48 +162,7 @@ public class LoginActivity extends AppCompatActivity {
             passwordText.setError(getString(R.string.invalid_password));
         }
         else {
-
-            loadingProgressBar.setVisibility(View.VISIBLE);
-            mAuth = FirebaseAuth.getInstance();
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            loadingProgressBar.setVisibility(View.GONE);
-                            if (task.isSuccessful()) {
-                                Log.d("SignIn", "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                db = FirebaseFirestore.getInstance();
-                                DocumentReference docRef = db.collection("users").document(user.getUid());
-                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            document = task.getResult();
-                                            if (document.exists()) {
-                                                Intent userLogin = new Intent();
-                                                userLogin.putExtra("userName", document.get("name").toString());
-                                                updateUiWithUser(userLogin);
-                                                setResult(LOGIN_SUCCESS);
-                                                if (checkBox.isChecked()){
-                                                    saveSharedPreferences(findViewById(R.id.container));
-                                                }
-                                                finish();
-                                                Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
-                                            } else {
-                                                Log.d("Get user data", "No such document");
-                                            }
-                                        } else {
-                                            Log.d("Get user data", "get failed with ", task.getException());
-                                        }
-                                    }
-                                });
-                            } else {
-                                Log.w("SignIn", "signInWithEmail:failure", task.getException());
-                                showLoginFailed();
-                            }
-                        }
-                    });
+            logUserIn(email, password);
         }
     }
 
@@ -258,5 +217,49 @@ public class LoginActivity extends AppCompatActivity {
         edit.putString("userPassword", password);
         edit.putBoolean("isChecked", true);
         edit.apply();
+    }
+
+    public void logUserIn(String email, String password){
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        loadingProgressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            Log.d("SignIn", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            db = FirebaseFirestore.getInstance();
+                            DocumentReference docRef = db.collection("users").document(user.getUid());
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        document = task.getResult();
+                                        if (document.exists()) {
+                                            Intent userLogin = new Intent();
+                                            userLogin.putExtra("userName", document.get("name").toString());
+                                            updateUiWithUser(userLogin);
+                                            setResult(LOGIN_SUCCESS);
+                                            if (checkBox.isChecked()){
+                                                saveSharedPreferences(findViewById(R.id.container));
+                                            }
+                                            finish();
+                                            Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
+                                        } else {
+                                            Log.d("Get user data", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("Get user data", "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.w("SignIn", "signInWithEmail:failure", task.getException());
+                            showLoginFailed();
+                        }
+                    }
+                });
     }
 }
