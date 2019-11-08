@@ -14,17 +14,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.study_session.Profile;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -35,7 +36,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             Pattern.compile(PASSWORD_REGEX);
     private EditText emailView,passwordView,userView;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore db;
     private ProgressBar spinner;
     private String userSchool,userName;
 
@@ -86,13 +87,10 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                 }
             }
         });
-
-
     }
 
     public void createAccount(String email, String password){
         //TODO add logic for validating user email
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -101,9 +99,24 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             spinner.setVisibility(View.GONE);
                             Log.d("CreateUser", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+                            db = FirebaseFirestore.getInstance();
+
                             Profile profile = new Profile(userName,userSchool);
-                            mDatabase.push().setValue(profile);
+                            db.collection("users").document(user.getUid())
+                                    .set(profile)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Adding User Info", "DocumentSnapshot successfully written!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Adding User Info", "Error writing document", e);
+                                        }
+                                    });
+
                             Intent successIntent = new Intent();
                             successIntent.putExtra("userName", userName);
                             successIntent.putExtra("userSchool", userSchool);
