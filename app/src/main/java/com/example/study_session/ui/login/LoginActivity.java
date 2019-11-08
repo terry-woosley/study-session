@@ -21,6 +21,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.regex.Pattern;
 
@@ -38,10 +41,12 @@ public class LoginActivity extends AppCompatActivity {
     public static final int LOGIN_SUCCESS = 103;
     public static final int LOGIN_ACTIVITY = 104;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private EditText userEmailText, passwordText;
     private Button loginButton;
     private ProgressBar loadingProgressBar;
     private String email,password;
+    private DocumentSnapshot document;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,10 +163,28 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d("SignIn", "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Intent userLogin = new Intent();
-                                //updateUiWithUser();
-                                setResult(LOGIN_SUCCESS, userLogin);
-                                finish();
+                                db = FirebaseFirestore.getInstance();
+                                DocumentReference docRef = db.collection("users").document(user.getUid());
+                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            document = task.getResult();
+                                            if (document.exists()) {
+                                                Intent userLogin = new Intent();
+                                                userLogin.putExtra("userName", document.get("name").toString());
+                                                updateUiWithUser(userLogin);
+                                                setResult(LOGIN_SUCCESS, userLogin);
+                                                finish();
+                                                Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
+                                            } else {
+                                                Log.d("Get user data", "No such document");
+                                            }
+                                        } else {
+                                            Log.d("Get user data", "get failed with ", task.getException());
+                                        }
+                                    }
+                                });
                             } else {
                                 Log.w("SignIn", "signInWithEmail:failure", task.getException());
                                 showLoginFailed();

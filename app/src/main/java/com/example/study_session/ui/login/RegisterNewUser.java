@@ -24,8 +24,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
