@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Intent userLogin = new Intent();
                                                 userLogin.putExtra("userName", document.get("name").toString());
                                                 updateUiWithUser(userLogin);
-                                                setResult(LOGIN_SUCCESS, userLogin);
+                                                setResult(LOGIN_SUCCESS);
                                                 finish();
                                                 Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
                                             } else {
