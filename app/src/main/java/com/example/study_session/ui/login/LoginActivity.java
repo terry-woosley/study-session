@@ -1,9 +1,10 @@
 package com.example.study_session.ui.login;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -24,7 +26,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.regex.Pattern;
 
 /**
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loadingProgressBar;
     private String email,password;
     private DocumentSnapshot document;
+    private CheckBox checkBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,14 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         loadingProgressBar = findViewById(R.id.loading);
         loginButton = findViewById(R.id.login);
+        checkBox = findViewById(R.id.rememberCheck);
+
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        if (sp.contains("isChecked")){
+            if (sp.getBoolean("isChecked", false))
+            restoreSharedPreferences(findViewById(R.id.container));
+            //TODO extract database calls
+        }
 
         userEmailText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,6 +185,9 @@ public class LoginActivity extends AppCompatActivity {
                                                 userLogin.putExtra("userName", document.get("name").toString());
                                                 updateUiWithUser(userLogin);
                                                 setResult(LOGIN_SUCCESS);
+                                                if (checkBox.isChecked()){
+                                                    saveSharedPreferences(findViewById(R.id.container));
+                                                }
                                                 finish();
                                                 Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
                                             } else {
@@ -232,4 +245,18 @@ public class LoginActivity extends AppCompatActivity {
         return (email.contains("@") && email.contains(".com"));
     }
 
+    public void restoreSharedPreferences(View v){
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        email = sp.getString("userEmail", "null");
+        password = sp.getString("userPassword", "null");
+    }
+
+    public void saveSharedPreferences(View v){
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("userEmail",email);
+        edit.putString("userPassword", password);
+        edit.putBoolean("isChecked", true);
+        edit.apply();
+    }
 }
