@@ -7,27 +7,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.study_session.data.model.LoggedInUser;
 
 public class GroupCreateActivity extends AppCompatActivity {
-
-    Button createGroupBTN;
-    EditText groupNameET;
-    EditText groupSubject;
-    EditText meetingTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
-        createGroupBTN = (Button) findViewById(R.id.createGroupBTN);
-        groupNameET = (EditText) findViewById(R.id.groupNameET);
-        groupSubject = (EditText) findViewById(R.id.groupSubjectET);
-        meetingTime = (EditText) findViewById(R.id.meetingTimeET);
+
+        Button createGroupBTN = findViewById(R.id.createGroupBTN);
+        final EditText groupNameET = findViewById(R.id.groupNameET);
+        final EditText groupSubjectET = findViewById(R.id.groupSubjectET);
+
         createGroupBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group group = new Group(groupNameET.getText().toString(),"", "",null,null,groupSubject.getText().toString());
+                Group group = new Group(groupNameET.getText().toString(),"", "",null,null,groupSubjectET.getText().toString());
                 group.addNewGroup();
             }
         });
