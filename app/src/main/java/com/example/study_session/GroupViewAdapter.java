@@ -13,11 +13,11 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
     //subclass for adapting RecyclerView.ViewHolder to new layout
     public static class GroupViewViewHolder extends RecyclerView.ViewHolder{
 
-        private LinearLayout theView;
+        private LinearLayout groupViewHolder;
 
         public GroupViewViewHolder(LinearLayout v){
             super(v);
-            theView = v;
+            groupViewHolder = v;
         }
     }
 
@@ -32,12 +32,17 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
     @NonNull
     @Override
     public GroupViewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        LinearLayout groupLayout =(LinearLayout)LayoutInflater.from(parent.getContext()).inflate(R.layout.group_layout, parent, false);
+        return new GroupViewViewHolder(groupLayout);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GroupViewAdapter.GroupViewViewHolder holder, int position) {
+        TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.groupNameTV);
+        TextView subjectTV = holder.groupViewHolder.findViewById(R.id.subjectTV);
+        TextView schoolTV = holder.groupViewHolder.findViewById(R.id.schoolTV);
 
+        //TODO: Fill text views with data from the database
     }
 
     @Override

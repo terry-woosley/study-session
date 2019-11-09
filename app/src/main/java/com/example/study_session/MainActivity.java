@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
+
+        //TODO: bind GroupViewAdapter
     }
 
     /**
