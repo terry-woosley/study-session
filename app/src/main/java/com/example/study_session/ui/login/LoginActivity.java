@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
         if (email == null) {
             return false;
         }
-        return (email.contains("@") && email.contains(".com"));
+        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
     }
 
     public void restoreSharedPreferences(View v){
