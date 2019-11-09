@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">study-Session</string>
+    <string name="app_name">Study Session</string>
     <string-array name="schools_array">
         <item>Northwest Missouri State University</item>
         <item>Missouri Western State University</item>
