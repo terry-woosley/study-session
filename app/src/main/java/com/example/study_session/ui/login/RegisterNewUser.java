@@ -139,7 +139,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         if (email == null) {
             return false;
         }
-        return (email.contains("@") && email.contains(".com"));
+        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
