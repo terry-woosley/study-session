@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">study-Session</string>
+    <string name="app_name">Study Session</string>
     <string-array name="schools_array">
         <item>Northwest Missouri State University</item>
         <item>Missouri Western State University</item>
@@ -18,7 +18,7 @@
     <string name="empty_username">Please enter a username</string>
     <string name="empty_school">Please select a school</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome "</string>
     <string name="invalid_email">Not a valid email address</string>
     <string name="invalid_password">Password must be >10 characters and contain a number, a special character, lowercase and an uppercase letter</string>
     <string name="login_failed">"Login failed"</string>
@@ -30,4 +30,5 @@
     <string name="school">School:</string>
     <string name="times">Times:</string>
     <string name="emailLabel">Email:</string>
+    <string name="remember_me">Remember Me?</string>
 </resources>

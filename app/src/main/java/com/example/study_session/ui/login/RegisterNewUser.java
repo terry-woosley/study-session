@@ -3,6 +3,7 @@ package com.example.study_session.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,30 +14,29 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import com.example.study_session.Profile;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.regex.Pattern;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final String PASSWORD_REGEX =
+    public static final String PASSWORD_REGEX =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);
-    private EditText emailView;
-    private EditText passwordView;
+    private EditText emailView,passwordView,userView;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private ProgressBar spinner;
-    private EditText userView;
-    private Spinner schoolSpinner;
-    private String userSchool;
-    private String userName;
+    private String userSchool,userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +45,13 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         emailView = findViewById(R.id.emailView);
         passwordView = findViewById(R.id.passwordView);
         spinner = findViewById(R.id.progressBar);
-        schoolSpinner = findViewById(R.id.schoolDropDown);
+        Spinner schoolSpinner = findViewById(R.id.schoolDropDown);
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
         schoolSpinner.setAdapter(adapter);
         schoolSpinner.setOnItemSelectedListener(this);
 
@@ -83,17 +81,14 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }
                 }
                 catch (NullPointerException e){
-                    System.out.println("OOPS");
+                    System.out.println("Please complete all fields");
                 }
             }
         });
-
-
     }
 
     public void createAccount(String email, String password){
         //TODO add logic for validating user email
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -102,7 +97,30 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             spinner.setVisibility(View.GONE);
                             Log.d("CreateUser", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
+                            db = FirebaseFirestore.getInstance();
+
+                            Profile profile = new Profile(userName,userSchool);
+                            db.collection("users").document(user.getUid())
+                                    .set(profile)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Adding User Info", "DocumentSnapshot successfully written!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Adding User Info", "Error writing document", e);
+                                        }
+                                    });
+
+                            Intent successIntent = new Intent();
+                            successIntent.putExtra("userName", userName);
+                            successIntent.putExtra("userSchool", userSchool);
+                            successIntent.putExtra("UID", user.getUid());
+                            setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
+                            finish();
                         } else {
                             spinner.setVisibility(View.GONE);
                             Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
@@ -111,11 +129,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         }
                     }
                 });
-
-
-
     }
-
 
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
@@ -125,7 +139,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         if (email == null) {
             return false;
         }
-        return (email.contains("@") && email.contains(".com"));
+        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,

@@ -1,130 +1,110 @@
 package com.example.study_session.ui.login;
 
-import android.app.Activity;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.study_session.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.regex.Pattern;
 
 /**
  * Performs tha main logic for the Login activity
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
+    public static final String PASSWORD_REGEX =
+            "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile(PASSWORD_REGEX);
     public static final int REGISTER_USER = 101;
     public static final int SUCCESSFUL_REGISTRATION = 102;
     public static final int LOGIN_SUCCESS = 103;
     public static final int LOGIN_ACTIVITY = 104;
-    public static final int EDIT_USER_INFO = 105;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private EditText userEmailText, passwordText;
+    private Button loginButton;
+    private ProgressBar loadingProgressBar;
+    private String email,password;
+    private DocumentSnapshot document;
+    private CheckBox checkBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.emailView);
-        final EditText passwordEditText = findViewById(R.id.passwordView);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-        final TextView signUp = findViewById(R.id.signUp);
+        userEmailText = findViewById(R.id.emailView);
+        passwordText = findViewById(R.id.passwordView);
+        loginButton = findViewById(R.id.login);
+        loadingProgressBar = findViewById(R.id.loading);
+        loginButton = findViewById(R.id.login);
+        checkBox = findViewById(R.id.rememberCheck);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        if (sp.contains("isChecked")){
+            if (sp.getBoolean("isChecked", false))
+            restoreSharedPreferences(findViewById(R.id.container));
+            logUserIn(email, password);
+        }
+
+        userEmailText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                //Checks for valid info before enabling button
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                    //TODO
-                }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
+                if (!(TextUtils.isEmpty(passwordText.getText()))){
+                    loginButton.setEnabled(true);
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                if(TextUtils.isEmpty(passwordText.getText()) || TextUtils.isEmpty(userEmailText.getText()) ){
+                    loginButton.setEnabled(false);
                 }
-                return false;
             }
         });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        passwordText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!(TextUtils.isEmpty(userEmailText.getText()))){
+                    loginButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(TextUtils.isEmpty(passwordText.getText()) || TextUtils.isEmpty(userEmailText.getText()) ){
+                    loginButton.setEnabled(false);
+                }
             }
         });
     }
@@ -149,6 +129,8 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void onActivityResult(int requestCode,int resultCode,Intent data){
         if(resultCode == SUCCESSFUL_REGISTRATION){
+            String welcome = getString(R.string.welcome) + data.getStringExtra("userName");
+            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
             setResult(SUCCESSFUL_REGISTRATION, data);
             finish();
         }
@@ -157,30 +139,50 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void login(View view){
-        Intent userLogin = new Intent();
-        setResult(LOGIN_SUCCESS, userLogin);
-        finish();
+    public void signIn(View view){
+
+        try {
+            email = userEmailText.getText().toString();
+        }
+        catch (NullPointerException e){
+            userEmailText.setError("Please enter an email address");
+            return;
+        }
+        try {
+            password = passwordText.getText().toString();
+        }
+        catch (NullPointerException e){
+            passwordText.setError("Please enter a password");
+            return;
+        }
+
+        if (!isEmailValid(email)) {
+            userEmailText.setError(getString(R.string.invalid_email));
+        } else if (!isPasswordValid(password)) {
+            passwordText.setError(getString(R.string.invalid_password));
+        }
+        else {
+            logUserIn(email, password);
+        }
     }
 
     /**
      * Displays a welcome message to the user upon successful login
      *
-     * @param model with the user's login information
+     * @param data with the user's login information
      */
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
+    private void updateUiWithUser(Intent data) {
+        String welcome = getString(R.string.welcome) + data.getStringExtra("userName");
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     /**
      * Prints a pop-up error message to the screen when Login fails
      *
-     * @param errorString the error message to display to user
      */
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }
+    private void showLoginFailed() {
+        Toast.makeText(getApplicationContext(), "Authentication failed.",
+                Toast.LENGTH_SHORT).show();    }
 
     /**
      * Prints a pop-up error message to the screen when registration failes
@@ -191,13 +193,73 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Prints a pop-up error message to the screen
-     *
-     * @param message the error message to display to user
-     */
-    public void alertMessage(String message)
-    {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private static boolean isPasswordValid(String password) {
+        return (PASSWORD_PATTERN.matcher(password).matches());
+    }
+
+    private static boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        }
+        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
+    }
+
+    public void restoreSharedPreferences(View v){
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        email = sp.getString("userEmail", "null");
+        password = sp.getString("userPassword", "null");
+    }
+
+    public void saveSharedPreferences(View v){
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("userEmail",email);
+        edit.putString("userPassword", password);
+        edit.putBoolean("isChecked", true);
+        edit.apply();
+    }
+
+    public void logUserIn(String email, String password){
+        loadingProgressBar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        loadingProgressBar.setVisibility(View.GONE);
+                        if (task.isSuccessful()) {
+                            Log.d("SignIn", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            db = FirebaseFirestore.getInstance();
+                            DocumentReference docRef = db.collection("users").document(user.getUid());
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        document = task.getResult();
+                                        if (document.exists()) {
+                                            Intent userLogin = new Intent();
+                                            userLogin.putExtra("userName", document.get("name").toString());
+                                            updateUiWithUser(userLogin);
+                                            setResult(LOGIN_SUCCESS);
+                                            if (checkBox.isChecked()){
+                                                saveSharedPreferences(findViewById(R.id.container));
+                                            }
+                                            finish();
+                                            Log.d("Get user data", "DocumentSnapshot data: " + document.getData());
+                                        } else {
+                                            Log.d("Get user data", "No such document");
+                                        }
+                                    } else {
+                                        Log.d("Get user data", "get failed with ", task.getException());
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.w("SignIn", "signInWithEmail:failure", task.getException());
+                            showLoginFailed();
+                        }
+                    }
+                });
     }
 }
