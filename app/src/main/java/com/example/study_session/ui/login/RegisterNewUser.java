@@ -30,8 +30,11 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
 
     public static final String PASSWORD_REGEX =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    public static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile(EMAIL_REGEX);
     private EditText emailView,passwordView,userView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -136,10 +139,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     }
 
     private static boolean isEmailValid(String email) {
-        if (email == null) {
-            return false;
-        }
-        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
+        return (EMAIL_PATTERN.matcher(email).matches());
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,

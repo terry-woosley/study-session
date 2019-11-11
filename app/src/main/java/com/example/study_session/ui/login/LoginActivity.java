@@ -35,8 +35,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String PASSWORD_REGEX =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{10,22}$";
+    public static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile(PASSWORD_REGEX);
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile(EMAIL_REGEX);
     public static final int REGISTER_USER = 101;
     public static final int SUCCESSFUL_REGISTRATION = 102;
     public static final int LOGIN_SUCCESS = 103;
@@ -62,12 +65,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         checkBox = findViewById(R.id.rememberCheck);
 
-        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
-        if (sp.contains("isChecked")){
-            if (sp.getBoolean("isChecked", false))
-            restoreSharedPreferences(findViewById(R.id.container));
-            logUserIn(email, password);
-        }
+//        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+//        if (sp.contains("isChecked")){
+//            if (sp.getBoolean("isChecked", false))
+//            restoreSharedPreferences(findViewById(R.id.container));
+//            logUserIn(email, password);
+//        }
 
         userEmailText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -198,10 +201,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private static boolean isEmailValid(String email) {
-        if (email == null) {
-            return false;
-        }
-        return (email.contains("@") && email.contains(".com") || email.contains(".edu"));
+        return (EMAIL_PATTERN.matcher(email).matches());
     }
 
     public void restoreSharedPreferences(View v){
