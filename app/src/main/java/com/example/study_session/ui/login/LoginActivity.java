@@ -241,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (document.exists()) {
                                             Intent userLogin = new Intent();
                                             userLogin.putExtra("userName", document.get("name").toString());
-                                            userLogin.putExtra("userName", document.get("name").toString());
+                                            userLogin.putExtra("school", document.get("school").toString());
                                             userLogin.putExtra("uid",user.getUid());
                                             updateUiWithUser(userLogin);
                                             setResult(LOGIN_SUCCESS, userLogin);
