@@ -120,8 +120,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
 
                             Intent successIntent = new Intent();
                             successIntent.putExtra("userName", userName);
-                            successIntent.putExtra("userSchool", userSchool);
-                            successIntent.putExtra("UID", user.getUid());
+                            successIntent.putExtra("school", userSchool);
+                            successIntent.putExtra("uid", user.getUid());
                             setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
                             finish();
                         } else {

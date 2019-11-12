@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
+            userName = profile.getStringExtra("userName");
+            school = profile.getStringExtra("school");
+            uid = profile.getStringExtra("uid");
+            //Start add times/groups
         }
     }
 
