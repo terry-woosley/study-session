@@ -44,10 +44,9 @@ public class Group {
         group.put("creator", creator);
         group.put("subject", subject);
         group.put("timesAvailable", timesAvailable);
+        group.put("members", members);
 
-        db.collection("groups")
-                .add(group)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("groups").add(group).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -60,14 +59,19 @@ public class Group {
                     }
                 });
     }
+
+    public void joinGroup(String uid, String groupID){
+        //TODO: Retrive user id, get reference to group, update member array of group with user id
+    }
+
+    public void getSingleGroup(){
+
+    }
     
     public ArrayList<Group> getGroupsFromUniversity(final String school){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<Group> groupArrayList= new ArrayList<Group>();
-        db.collection("groups")
-                .whereEqualTo("groupSchool", school)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("groups").whereEqualTo("groupSchool", school).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
