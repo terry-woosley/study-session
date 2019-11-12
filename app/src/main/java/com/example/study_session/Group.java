@@ -61,7 +61,7 @@ public class Group {
     }
 
     public void joinGroup(String uid, String groupID){
-
+        //TODO: Retrive user id, get reference to group, update member array of group with user id
     }
 
     public void getSingleGroup(){
