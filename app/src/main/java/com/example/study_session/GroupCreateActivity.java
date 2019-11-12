@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+
 
 public class GroupCreateActivity extends AppCompatActivity {
 
@@ -22,7 +24,7 @@ public class GroupCreateActivity extends AppCompatActivity {
         createGroupBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group group = new Group(groupNameET.getText().toString(),"", "",null,null,groupSubjectET.getText().toString());
+                Group group = new Group(groupNameET.getText().toString(),"", "", new ArrayList<Date>(), new ArrayList<String>(),groupSubjectET.getText().toString());
                 group.addNewGroup();
             }
         });
