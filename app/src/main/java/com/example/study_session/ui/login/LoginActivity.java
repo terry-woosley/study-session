@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int LOGIN_ACTIVITY = 104;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private FirebaseUser user;
     private EditText userEmailText, passwordText;
     private Button loginButton;
     private ProgressBar loadingProgressBar;
@@ -229,7 +230,7 @@ public class LoginActivity extends AppCompatActivity {
                         loadingProgressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             Log.d("SignIn", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            user = mAuth.getCurrentUser();
                             db = FirebaseFirestore.getInstance();
                             DocumentReference docRef = db.collection("users").document(user.getUid());
                             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -240,8 +241,10 @@ public class LoginActivity extends AppCompatActivity {
                                         if (document.exists()) {
                                             Intent userLogin = new Intent();
                                             userLogin.putExtra("userName", document.get("name").toString());
+                                            userLogin.putExtra("userName", document.get("name").toString());
+                                            userLogin.putExtra("uid",user.getUid());
                                             updateUiWithUser(userLogin);
-                                            setResult(LOGIN_SUCCESS);
+                                            setResult(LOGIN_SUCCESS, userLogin);
                                             if (checkBox.isChecked()){
                                                 saveSharedPreferences(findViewById(R.id.container));
                                             }

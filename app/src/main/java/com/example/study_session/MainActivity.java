@@ -7,7 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import com.example.study_session.ui.login.LoginActivity;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private String userName,school,uid;
+    private List<String> groups;
 
 
 
@@ -32,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode,int resultCode,Intent profile){
         if(resultCode == LoginActivity.LOGIN_SUCCESS){
             setContentView(R.layout.activity_main);
+            userName = profile.getStringExtra("userName");
+            school = profile.getStringExtra("school");
+            uid = profile.getStringExtra("uid");
+            groups = getUserGroups(uid);
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
@@ -56,5 +65,10 @@ public class MainActivity extends AppCompatActivity {
     public void showGroup(View view){
         Intent showGroup = new Intent(this,GroupActivity.class);
         startActivity(showGroup);
+    }
+
+    //Stubbed
+    public List<String> getUserGroups(String uid){
+        return null;
     }
 }
