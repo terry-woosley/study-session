@@ -1,16 +1,18 @@
 package com.example.study_session;
 
+import java.util.List;
+
 public class Profile {
     String name;
     String school;
-    String[] groups;
+    List<String> groups;
     //Maybe consider changing the type to something more fitting
     Date[] timesAvailable;
 
     public Profile() {
     }
 
-    public Profile(String name, String school) {
+    public Profile(String userName, String userSchool) {
         this.name = name;
         this.school = school;
     }
@@ -32,4 +34,6 @@ public class Profile {
     public String getSchool() {
         return school;
     }
+
+    public List<String> getGroups(){return groups; }
 }

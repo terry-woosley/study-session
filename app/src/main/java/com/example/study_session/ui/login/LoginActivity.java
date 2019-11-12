@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.loading);
         loginButton = findViewById(R.id.login);
         checkBox = findViewById(R.id.rememberCheck);
-
+//TODO UNCOMMIT AFTER TESTING
 //        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
 //        if (sp.contains("isChecked")){
 //            if (sp.getBoolean("isChecked", false))

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import com.example.study_session.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
