@@ -129,13 +129,13 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param requestCode the code the activity was started with
      * @param resultCode the result of the activity
-     * @param data the intent from the activity
+     * @param profile the intent from the activity
      */
-    public void onActivityResult(int requestCode,int resultCode,Intent data){
+    public void onActivityResult(int requestCode,int resultCode,Intent profile){
         if(resultCode == SUCCESSFUL_REGISTRATION){
-            String welcome = getString(R.string.welcome) + data.getStringExtra("userName");
+            String welcome = getString(R.string.welcome) + profile.getStringExtra("userName");
             Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-            setResult(SUCCESSFUL_REGISTRATION, data);
+            setResult(SUCCESSFUL_REGISTRATION, profile);
             finish();
         }
         else {
