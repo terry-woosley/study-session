@@ -23,11 +23,11 @@ public class Group {
     String groupName;
     String groupSchool;
     String creator;
-    Date[] timesAvailable;
-    String[] members;
+    ArrayList<Date> timesAvailable;
+    ArrayList<String> members;
     String subject;
 
-    public Group(String groupName, String groupSchool, String creator, Date[] timesAvailable, String[] members, String subject){
+    public Group(String groupName, String groupSchool, String creator, ArrayList<Date> timesAvailable, ArrayList<String> members, String subject){
         this.groupName = groupName;
         this.groupSchool = groupSchool;
         this.creator = creator;
