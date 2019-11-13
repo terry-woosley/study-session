@@ -66,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.login);
         checkBox = findViewById(R.id.rememberCheck);
 //TODO UNCOMMIT AFTER TESTING
+//        //Checks SharedPreferences for remembered user, logs user in if true
 //        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
 //        if (sp.contains("isChecked")){
 //            if (sp.getBoolean("isChecked", false))
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 //            logUserIn(email, password);
 //        }
 
+        //Listens for changes in the email field and updates error message if needed
         userEmailText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -91,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        //Listens for changes in the password field and updates error message if needed
         passwordText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -143,6 +146,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks fields for non-null values and calls login method if all input is valid
+     *
+     * @param view the activity view
+     */
     public void signIn(View view){
 
         try {
@@ -185,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
      *
      */
     private void showLoginFailed() {
-        Toast.makeText(getApplicationContext(), "Authentication failed.",
+        Toast.makeText(getApplicationContext(), "Email or password incorrect",
                 Toast.LENGTH_SHORT).show();    }
 
     /**
@@ -197,20 +205,42 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Checks that the password is valid (it must meet OWASP password standard)
+     *
+     * @param password the user's password
+     * @return true if the password is valid
+     */
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
     }
 
+    /**
+     * Checks that the email is valid (only contains email specific characters)
+     *
+     * @param email the user's email
+     * @return true if the email is valid
+     */
     private static boolean isEmailValid(String email) {
         return (EMAIL_PATTERN.matcher(email).matches());
     }
 
+    /**
+     * Retrieves the user's saved login information from the SharePreferences
+     *
+     * @param v
+     */
     public void restoreSharedPreferences(View v){
         SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
         email = sp.getString("userEmail", "null");
         password = sp.getString("userPassword", "null");
     }
 
+    /**
+     * Saves the user's email and password to enable auto-login feature
+     *
+     * @param v the activity view
+     */
     public void saveSharedPreferences(View v){
         SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sp.edit();
@@ -220,6 +250,12 @@ public class LoginActivity extends AppCompatActivity {
         edit.apply();
     }
 
+    /**
+     * Logs the user into Firebase using the provided email and password
+     *
+     * @param email the user's email address
+     * @param password the user's password
+     */
     public void logUserIn(String email, String password){
         loadingProgressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();

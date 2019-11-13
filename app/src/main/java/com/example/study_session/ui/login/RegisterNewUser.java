@@ -57,14 +57,13 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         schoolSpinner.setAdapter(adapter);
         schoolSpinner.setOnItemSelectedListener(this);
-
         mAuth = FirebaseAuth.getInstance();
 
         final Button createAccount = findViewById(R.id.createBTN);
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Checks fields are non-null and inputs are valid
                 try {
                     String email = emailView.getText().toString();
                     String password = passwordView.getText().toString();
@@ -90,6 +89,12 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         });
     }
 
+    /**
+     * Creates a unique Firebase account with the user's email and password
+     *
+     * @param email the user's valid email
+     * @param password the user's valid password
+     */
     public void createAccount(String email, String password){
         //TODO add logic for validating user email
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -102,6 +107,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             FirebaseUser user = mAuth.getCurrentUser();
                             db = FirebaseFirestore.getInstance();
 
+                            //Populate database with user data using uid as document key
                             Profile profile = new Profile(userName,userSchool);
                             db.collection("users").document(user.getUid())
                                     .set(profile)
@@ -118,6 +124,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                                         }
                                     });
 
+                            //Pass user information to main activity
                             Intent successIntent = new Intent();
                             successIntent.putExtra("userName", userName);
                             successIntent.putExtra("school", userSchool);
@@ -134,14 +141,29 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                 });
     }
 
+    /**
+     * Checks that the password is valid (it must meet OWASP password standard)
+     *
+     * @param password the user's password
+     * @return true if the password is valid
+     */
     private static boolean isPasswordValid(String password) {
         return (PASSWORD_PATTERN.matcher(password).matches());
     }
 
+    /**
+     * Checks that the email is valid (only contains email specific characters)
+     *
+     * @param email the user's email
+     * @return true if the email is valid
+     */
     private static boolean isEmailValid(String email) {
         return (EMAIL_PATTERN.matcher(email).matches());
     }
 
+    /**
+     * Handles selecting a school
+     */
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         userSchool = parent.getItemAtPosition(pos).toString();
