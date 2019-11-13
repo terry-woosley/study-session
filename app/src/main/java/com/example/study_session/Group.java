@@ -67,8 +67,30 @@ public class Group {
         //TODO: Retrive user id, get reference to group, update member array of group with user id
     }
 
-    public void getSingleGroup(){
-
+    public ArrayList<Group> getGroupsFromReference(ArrayList<String> groupReferences) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<Group> groupArrayList = new ArrayList<>();
+        for (int i = 0; i < groupReferences.size(); i++) {
+            db.collection("groups").whereEqualTo("id", groupReferences.get(i))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String groupName = (String) document.get("groupName");
+                                    String groupSchool = (String) document.get("groupSchool");
+                                    String groupSubject = (String) document.get("groupSubject");
+                                    groupArrayList.add(new Group(groupName, groupSchool, null, null, null, groupSubject));
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                }
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+        }
+        return groupArrayList;
     }
     
     public ArrayList<Group> getGroupsFromUniversity(final String school){
