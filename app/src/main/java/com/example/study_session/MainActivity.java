@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void createGroup(View view){
         Intent createGroup = new Intent(this,GroupCreateActivity.class);
+        userName = createGroup.getStringExtra("userName");
+        school = createGroup.getStringExtra("school");
+        uid = createGroup.getStringExtra("uid");
         startActivity(createGroup);
     }
 

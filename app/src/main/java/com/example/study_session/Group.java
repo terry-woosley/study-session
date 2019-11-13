@@ -40,13 +40,16 @@ public class Group {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> group = new HashMap<>();
-        group.put("groupName", groupName);
+        group.put("name", groupName);
         group.put("creator", creator);
         group.put("subject", subject);
         group.put("timesAvailable", timesAvailable);
         group.put("members", members);
+        group.put("school", groupSchool);
 
-        db.collection("groups").add(group).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("groups")
+                .add(group)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -71,7 +74,9 @@ public class Group {
     public ArrayList<Group> getGroupsFromUniversity(final String school){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<Group> groupArrayList= new ArrayList<Group>();
-        db.collection("groups").whereEqualTo("groupSchool", school).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("groups").whereEqualTo("school", school)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {

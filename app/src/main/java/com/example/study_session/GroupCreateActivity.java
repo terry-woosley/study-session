@@ -2,6 +2,7 @@ package com.example.study_session;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,11 +13,16 @@ import java.util.ArrayList;
 
 
 public class GroupCreateActivity extends AppCompatActivity {
+    private String school,uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
+
+        Intent profile = getIntent();
+        school = profile.getStringExtra("school");
+        uid = profile.getStringExtra("uid");
 
         final ArrayList<Date> timesAvailable = new ArrayList<>();
         Button createGroupBTN = findViewById(R.id.createGroupBTN);
@@ -45,7 +51,7 @@ public class GroupCreateActivity extends AppCompatActivity {
         createGroupBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group group = new Group(groupNameET.getText().toString(),"", "", timesAvailable, new ArrayList<String>(),groupSubjectET.getText().toString());
+                Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, new ArrayList<String>(),groupSubjectET.getText().toString());
                 group.addNewGroup();
             }
         });
