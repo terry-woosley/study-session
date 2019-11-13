@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
         //TODO: bind GroupViewAdapter
+        //GroupViewAdapter groupServer = new GroupViewAdapter(groups);
     }
 
     /**
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void createGroup(View view){
         Intent createGroup = new Intent(this,GroupCreateActivity.class);
-        userName = createGroup.getStringExtra("userName");
         school = createGroup.getStringExtra("school");
         uid = createGroup.getStringExtra("uid");
         startActivity(createGroup);

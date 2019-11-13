@@ -22,30 +22,30 @@ import static android.content.ContentValues.TAG;
 public class Group {
     String groupName;
     String groupSchool;
-    String creator;
-    ArrayList<Date> timesAvailable;
-    ArrayList<String> members;
-    String subject;
+    String groupCreator;
+    ArrayList<Date> groupTimesAvailable;
+    ArrayList<String> groupMembers;
+    String groupSubject;
 
-    public Group(String groupName, String groupSchool, String creator, ArrayList<Date> timesAvailable, ArrayList<String> members, String subject){
-        this.groupName = groupName;
-        this.groupSchool = groupSchool;
-        this.creator = creator;
-        this.timesAvailable = timesAvailable;
-        this.members = members;
-        this.subject = subject;
+    public Group(String name, String school, String creator, ArrayList<Date> timesAvailable, ArrayList<String> members, String subject){
+        this.groupName = name;
+        this.groupSchool = school;
+        this.groupCreator = creator;
+        this.groupTimesAvailable = timesAvailable;
+        this.groupMembers = members;
+        this.groupSubject = subject;
     }
 
     public void addNewGroup(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> group = new HashMap<>();
-        group.put("name", groupName);
-        group.put("creator", creator);
-        group.put("subject", subject);
-        group.put("timesAvailable", timesAvailable);
-        group.put("members", members);
-        group.put("school", groupSchool);
+        group.put("groupName", groupName);
+        group.put("groupCreator", groupCreator);
+        group.put("groupSubject", groupSubject);
+        group.put("groupTimesAvailable", groupTimesAvailable);
+        group.put("groupMembers", groupMembers);
+        group.put("groupSchool", groupSchool);
 
         db.collection("groups")
                 .add(group)
@@ -74,7 +74,7 @@ public class Group {
     public ArrayList<Group> getGroupsFromUniversity(final String school){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<Group> groupArrayList= new ArrayList<Group>();
-        db.collection("groups").whereEqualTo("school", school)
+        db.collection("groups").whereEqualTo("groupSchool", school)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -82,8 +82,8 @@ public class Group {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String groupName = (String) document.get("groupName");
-                                String groupCreator = (String) document.get("creator");
-                                String groupSubject = (String) document.get("subject");
+                                String groupCreator = (String) document.get("groupCreator");
+                                String groupSubject = (String) document.get("groupSubject");
                                 groupArrayList.add(new Group(groupName, school, groupCreator,null,null,groupSubject));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
