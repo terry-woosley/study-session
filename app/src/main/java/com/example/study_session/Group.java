@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -65,6 +66,41 @@ public class Group {
 
     public void joinGroup(String uid, String groupID){
         //TODO: Retrive user id, get reference to group, update member array of group with user id
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference groupDoc = db.collection("groups").document(groupID);
+        final ArrayList<String> groupMembersList = new ArrayList<>();
+        //retrieve members list from referenced group
+        db.collection("groups").whereEqualTo("id", groupID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
+                        for(int i = 0; i < groupMembers.size(); i++) {
+                            groupMembersList.add(groupMembers.get(i));
+                        }
+                    }
+                } else {
+                    Log.d(TAG, "Error getting document: ", task.getException());
+                }
+            }
+        });
+        //add new member to list
+        groupMembersList.add(uid);
+        //update field in groupMembers with new group members list
+        groupDoc.update("groupMembers", groupMembersList)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
     }
 
     public ArrayList<Group> getGroupsFromReference(ArrayList<String> groupReferences) {
