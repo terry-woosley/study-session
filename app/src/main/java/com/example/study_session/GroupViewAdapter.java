@@ -44,7 +44,9 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
         TextView schoolTV = holder.groupViewHolder.findViewById(R.id.schoolTV);
 
         //TODO: Fill text views with data from the database
-
+        groupNameTV.setText(groupModel.get(position).groupName);
+        subjectTV.setText(groupModel.get(position).groupSubject);
+        schoolTV.setText(groupModel.get(position).groupSchool);
     }
 
     @Override

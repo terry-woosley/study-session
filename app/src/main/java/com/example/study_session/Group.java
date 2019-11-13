@@ -80,12 +80,15 @@ public class Group {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String groupName = (String) document.get("groupName");
                                     String groupSchool = (String) document.get("groupSchool");
+                                    String groupCreator = (String) document.get("groupCreator");
+                                    ArrayList<Date> groupTimesAvailable = (ArrayList<Date>) document.get("groupTimesAvailable");
+                                    ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                                     String groupSubject = (String) document.get("groupSubject");
-                                    groupArrayList.add(new Group(groupName, groupSchool, null, null, null, groupSubject));
+                                    groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
                                     Log.d(TAG, document.getId() + " => " + document.getData());
                                 }
                             } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
+                                Log.d(TAG, "Error getting document: ", task.getException());
                             }
                         }
                     });

@@ -1,18 +1,22 @@
 package com.example.study_session;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import com.example.study_session.ui.login.LoginActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private String userName,school,uid;
-    private List<String> groups;
+    private List<String> userGroups;
+    private ArrayList<Group> groups;
 
 
 
@@ -24,8 +28,16 @@ public class MainActivity extends AppCompatActivity {
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
-        //TODO: bind GroupViewAdapter
-        //GroupViewAdapter groupServer = new GroupViewAdapter(groups);
+        //TODO: Call getGroupsFromReference here somehow?
+        /*
+        //bind GroupViewAdapter for group list
+        GroupViewAdapter groupServer = new GroupViewAdapter(groups);
+        RecyclerView groupsRV = findViewById(R.id.groupsRV);
+        groupsRV.setAdapter(groupServer);
+        //bind layoutManager for group list
+        LinearLayoutManager groupManager = new LinearLayoutManager(this);
+        groupsRV.setLayoutManager(groupManager);
+         */
     }
 
     /**
@@ -41,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
-            groups = getUserGroups(uid);
+            userGroups = getUserGroups(uid);
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
