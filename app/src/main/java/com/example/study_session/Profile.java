@@ -13,8 +13,8 @@ public class Profile {
     }
 
     public Profile(String userName, String userSchool) {
-        this.name = name;
-        this.school = school;
+        this.name = userName;
+        this.school = userSchool;
     }
 
     /**
