@@ -52,7 +52,7 @@ public class GroupCreateActivity extends AppCompatActivity {
         createGroupBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, new ArrayList<String>(),groupSubjectET.getText().toString());
+                Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, null, groupSubjectET.getText().toString());
                 group.addNewGroup();
             }
         });

@@ -28,8 +28,10 @@ public class MainActivity extends AppCompatActivity {
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
-        //TODO: Call getGroupsFromReference here somehow?
         /*
+        //TODO: Call getGroupsFromReference here somehow?
+        groups = Group.getGroupsFromReference(userGroups);
+
         //bind GroupViewAdapter for group list
         GroupViewAdapter groupServer = new GroupViewAdapter(groups);
         RecyclerView groupsRV = findViewById(R.id.groupsRV);
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         //bind layoutManager for group list
         LinearLayoutManager groupManager = new LinearLayoutManager(this);
         groupsRV.setLayoutManager(groupManager);
-         */
+        */
     }
 
     /**

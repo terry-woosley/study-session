@@ -22,12 +22,12 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
         }
     }
 
-    private ArrayList<Group> groupModel;
+    private ArrayList<Group> groupList;
 
     //constructor
     public GroupViewAdapter(ArrayList<Group> g){
         super();
-        this.groupModel = g;
+        this.groupList = g;
     }
 
     @NonNull
@@ -44,13 +44,13 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
         TextView schoolTV = holder.groupViewHolder.findViewById(R.id.schoolTV);
 
         //TODO: Fill text views with data from the database
-        groupNameTV.setText(groupModel.get(position).groupName);
-        subjectTV.setText(groupModel.get(position).groupSubject);
-        schoolTV.setText(groupModel.get(position).groupSchool);
+        groupNameTV.setText(groupList.get(position).groupName);
+        subjectTV.setText(groupList.get(position).groupSubject);
+        schoolTV.setText(groupList.get(position).groupSchool);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return groupList.size();
     }
 }

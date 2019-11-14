@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.ContentValues.TAG;
@@ -103,7 +104,7 @@ public class Group {
                 });
     }
 
-    public ArrayList<Group> getGroupsFromReference(ArrayList<String> groupReferences) {
+    public static ArrayList<Group> getGroupsFromReference(List<String> groupReferences) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<Group> groupArrayList = new ArrayList<>();
         for (int i = 0; i < groupReferences.size(); i++) {
