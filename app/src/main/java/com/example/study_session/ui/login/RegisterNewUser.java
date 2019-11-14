@@ -2,7 +2,6 @@ package com.example.study_session.ui.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.example.study_session.Date;
 import com.example.study_session.Profile;
 import com.example.study_session.R;
@@ -27,7 +25,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -47,6 +44,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private String userSchool,userName, day;
     private TimePicker timePicker;
     private ArrayList<Date> timesAvailable;
+    private boolean timeFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +58,6 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
         timePicker = findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(true);
         timesAvailable = new ArrayList<>();
 
 
@@ -96,7 +93,9 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         Toast.makeText(getApplicationContext(), getString(R.string.empty_school), Toast.LENGTH_SHORT).show();
                     } else if (userName == null) {
                         userView.setError(getString(R.string.empty_username));
-                    } else {
+                    } else if (!timeFlag) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.no_time), Toast.LENGTH_SHORT).show();
+                    }else {
                         spinner.setVisibility(View.VISIBLE);
                         createAccount(email, password);
                     }
@@ -113,8 +112,21 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             public void onClick(View v) {
                 int hour = timePicker.getCurrentHour();
                 int min = timePicker.getCurrentMinute();
-                Date date = new Date(day,hour, min);
+                String meridiem;
+                if (hour == 0) {
+                    hour += 12;
+                    meridiem = "AM";
+                } else if (hour == 12) {
+                    meridiem = "PM";
+                } else if (hour > 12) {
+                    hour -= 12;
+                    meridiem = "PM";
+                } else {
+                    meridiem = "AM";
+                }
+                Date date = new Date(day, hour, min, meridiem);
                 timesAvailable.add(date);
+                timeFlag = true;
             }
         });
     }
@@ -138,7 +150,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             db = FirebaseFirestore.getInstance();
 
                             //Populate database with user data using uid as document key
-                            Profile profile = new Profile(userName,userSchool, timesAvailable);
+                            Profile profile = new Profile(userName,userSchool,timesAvailable);
                             db.collection("users").document(user.getUid())
                                     .set(profile)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

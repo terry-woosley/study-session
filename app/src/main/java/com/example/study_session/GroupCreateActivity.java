@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class GroupCreateActivity extends AppCompatActivity {
-    private String school,uid;
+    private String school,uid, meridiem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,8 @@ public class GroupCreateActivity extends AppCompatActivity {
         Intent profile = getIntent();
         school = profile.getStringExtra("school");
         uid = profile.getStringExtra("uid");
+        //TODO logic to gather am/pm from user
+        meridiem = "AM";
 
         final ArrayList<Date> timesAvailable = new ArrayList<>();
         Button createGroupBTN = findViewById(R.id.createGroupBTN);
@@ -42,7 +44,7 @@ public class GroupCreateActivity extends AppCompatActivity {
                 String minuteString = minuteET.getText().toString();
                 Integer minute = Integer.parseInt(minuteString);
                 //parse date and add it to timesAvailable
-                Date date = new Date(weekdayET.getText().toString(), hour, minute);
+                Date date = new Date(weekdayET.getText().toString(), hour, minute, meridiem);
                 timesAvailable.add(date);
                 Log.d("LOG", "Date " + date.dateToText() + " added to times available");
             }

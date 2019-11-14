@@ -26,6 +26,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="empty_username">Please enter a username</string>
     <string name="empty_school">Please select a school</string>
+    <string name="no_time">Please add a time you are available</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome "</string>
     <string name="invalid_email">Not a valid email address</string>
