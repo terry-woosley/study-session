@@ -7,7 +7,7 @@
     tools:context=".ProfileActivity">
 
     <TextView
-        android:id="@+id/profleEmailDisplayTV"
+        android:id="@+id/profileEmailDisplayTV"
         android:layout_width="98"
         android:layout_height="35"
         android:layout_marginStart="48dp"
