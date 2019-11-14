@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TimePicker;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +41,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private FirebaseFirestore db;
     private ProgressBar spinner;
     private String userSchool,userName;
+    private TimePicker timePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         Spinner schoolSpinner = findViewById(R.id.schoolDropDown);
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
+        timePicker = findViewById(R.id.timePicker);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
