@@ -60,7 +60,6 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         timePicker = findViewById(R.id.timePicker);
         timesAvailable = new ArrayList<>();
 
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -101,11 +100,12 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }
                 }
                 catch (NullPointerException e){
-                    System.out.println("Please complete all fields");
+                    Toast.makeText(getApplicationContext(), getString(R.string.empty_fields), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        //Handles gathering the time data from the timePicker
         final Button addTime = findViewById(R.id.addTimeBTN);
         addTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +126,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                 }
                 Date date = new Date(day, hour, min, meridiem);
                 timesAvailable.add(date);
+                Log.d("Add Time", "Added available time to user");
+                Toast.makeText(getApplicationContext(), getString(R.string.added_time), Toast.LENGTH_SHORT).show();
                 timeFlag = true;
             }
         });

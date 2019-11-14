@@ -25,7 +25,9 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="empty_username">Please enter a username</string>
+    <string name="empty_fields">Please complete all fields</string>
     <string name="empty_school">Please select a school</string>
+    <string name="added_time">Successfully added time</string>
     <string name="no_time">Please add a time you are available</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome "</string>
@@ -41,4 +43,8 @@
     <string name="times">Times:</string>
     <string name="emailLabel">Email:</string>
     <string name="remember_me">Remember Me?</string>
+    <string name="university">University</string>
+    <string name="day_of_the_week">Day of the Week</string>
+    <string name="add_time">Add Time</string>
+    <string name="username">Username</string>
 </resources>
