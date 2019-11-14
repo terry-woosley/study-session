@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 
 public class GroupCreateActivity extends AppCompatActivity {
-    private String school,uid, meridiem;
+    private String school, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +23,6 @@ public class GroupCreateActivity extends AppCompatActivity {
         Intent profile = getIntent();
         school = profile.getStringExtra("school");
         uid = profile.getStringExtra("uid");
-        //TODO logic to gather am/pm from user
-        meridiem = "AM";
 
         final ArrayList<Date> timesAvailable = new ArrayList<>();
         Button createGroupBTN = findViewById(R.id.createGroupBTN);
@@ -35,7 +33,7 @@ public class GroupCreateActivity extends AppCompatActivity {
         addTimeBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //reconvert values everytime addTimeBTN is clicked
+                //reconvert values every time addTimeBTN is clicked
                 EditText weekdayET = findViewById(R.id.weekdayTimeET);
                 EditText hourET = findViewById(R.id.hourTimeET);
                 String hourString = hourET.getText().toString();
@@ -43,8 +41,9 @@ public class GroupCreateActivity extends AppCompatActivity {
                 EditText minuteET = findViewById(R.id.minuteTimeET);
                 String minuteString = minuteET.getText().toString();
                 Integer minute = Integer.parseInt(minuteString);
+                EditText amPmET = findViewById(R.id.amPmET);
                 //parse date and add it to timesAvailable
-                Date date = new Date(weekdayET.getText().toString(), hour, minute, meridiem);
+                Date date = new Date(weekdayET.getText().toString(), hour, minute, amPmET.getText().toString());
                 timesAvailable.add(date);
                 Log.d("LOG", "Date " + date.dateToText() + " added to times available");
             }
