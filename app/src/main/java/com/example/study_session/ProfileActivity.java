@@ -19,6 +19,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+
+
     public void populateProfie(){
         //get name from database
         //get email from database

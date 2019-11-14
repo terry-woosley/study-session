@@ -17,6 +17,7 @@ public class Profile {
         this.timesAvailable = timesAvailable;
     }
 
+
     public ArrayList<Date> getTimesAvailable() {
         return timesAvailable;
     }
