@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.study_session.Date;
 import com.example.study_session.Profile;
 import com.example.study_session.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,6 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -42,6 +46,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private ProgressBar spinner;
     private String userSchool,userName, day;
     private TimePicker timePicker;
+    private ArrayList<Date> timesAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,9 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
         timePicker = findViewById(R.id.timePicker);
+        timePicker.setIs24HourView(true);
+        timesAvailable = new ArrayList<>();
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.schools_array, android.R.layout.simple_spinner_item);
@@ -98,6 +106,17 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                 }
             }
         });
+
+        final Button addTime = findViewById(R.id.addTimeBTN);
+        addTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour = timePicker.getCurrentHour();
+                int min = timePicker.getCurrentMinute();
+                Date date = new Date(day,hour, min);
+                timesAvailable.add(date);
+            }
+        });
     }
 
     /**
@@ -119,7 +138,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                             db = FirebaseFirestore.getInstance();
 
                             //Populate database with user data using uid as document key
-                            Profile profile = new Profile(userName,userSchool);
+                            Profile profile = new Profile(userName,userSchool, timesAvailable);
                             db.collection("users").document(user.getUid())
                                     .set(profile)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -1,20 +1,24 @@
 package com.example.study_session;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Profile {
     String name;
     String school;
-    List<String> groups;
-    //Maybe consider changing the type to something more fitting
-    Date[] timesAvailable;
+    ArrayList<Date> timesAvailable;
+    ArrayList<String> groups;
 
     public Profile() {
     }
 
-    public Profile(String userName, String userSchool) {
+    public Profile(String userName, String userSchool, ArrayList<Date> timesAvailable) {
         this.name = userName;
         this.school = userSchool;
+        this.timesAvailable = timesAvailable;
+    }
+
+    public ArrayList<Date> getTimesAvailable() {
+        return timesAvailable;
     }
 
     /**
@@ -35,5 +39,5 @@ public class Profile {
         return school;
     }
 
-    public List<String> getGroups(){return groups; }
+    public ArrayList<String> getGroups(){return groups; }
 }
