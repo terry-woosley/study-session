@@ -40,7 +40,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private ProgressBar spinner;
-    private String userSchool,userName;
+    private String userSchool,userName, day;
     private TimePicker timePicker;
 
     @Override
@@ -51,6 +51,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         passwordView = findViewById(R.id.passwordView);
         spinner = findViewById(R.id.progressBar);
         Spinner schoolSpinner = findViewById(R.id.schoolDropDown);
+        Spinner daySpinner = findViewById(R.id.dayDropDown);
         spinner.setVisibility(View.GONE);
         userView = findViewById(R.id.nameVIew);
         timePicker = findViewById(R.id.timePicker);
@@ -60,6 +61,13 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         schoolSpinner.setAdapter(adapter);
         schoolSpinner.setOnItemSelectedListener(this);
+
+        ArrayAdapter<CharSequence> adapterDay = ArrayAdapter.createFromResource(this,
+                R.array.days_array, android.R.layout.simple_spinner_item);
+        adapterDay.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        daySpinner.setAdapter(adapterDay);
+        daySpinner.setOnItemSelectedListener(this);
+
         mAuth = FirebaseAuth.getInstance();
 
         final Button createAccount = findViewById(R.id.createBTN);
@@ -165,11 +173,19 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     }
 
     /**
-     * Handles selecting a school
+     * Handles selecting in a spinner
      */
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        userSchool = parent.getItemAtPosition(pos).toString();
+        Spinner spin = (Spinner)parent;
+        if(spin.getId() == R.id.schoolDropDown)
+        {
+            userSchool = parent.getItemAtPosition(pos).toString();
+        }
+        if(spin.getId() == R.id.dayDropDown)
+        {
+            day = parent.getItemAtPosition(pos).toString();
+        }
     }
 
     //This is only here to not make the interface call angry
