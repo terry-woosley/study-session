@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void showProfile(View view){
         Intent showProfile = new Intent(this,ProfileActivity.class);
-        school = showProfile.getStringExtra("school");
-        uid = showProfile.getStringExtra("uid");
-
+        showProfile.putExtra("school",school);
+       showProfile.putExtra("uid",uid);
+        showProfile.putExtra("username",userName);
         startActivity(showProfile);
     }
 

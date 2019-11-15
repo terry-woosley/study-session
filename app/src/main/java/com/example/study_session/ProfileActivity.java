@@ -16,14 +16,25 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        TextView schoolSet = (TextView)findViewById(R.id.profileSchoolDisplayTV);
+        TextView nameSet = (TextView)findViewById(R.id.profileNameDisplayTV);
+        TextView timeSet = (TextView)findViewById(R.id.profileTimesDisplayTV);
+        TextView emailSet = (TextView)findViewById(R.id.profileEmailDisplayTV);
+
+        Intent intent = getIntent();
+
+        String school = intent.getStringExtra("school");
+        String email = intent.getStringExtra("email");
+        String username = intent.getStringExtra("username");
+
+
+
+        nameSet.setText(username);
+        schoolSet.setText(school);
     }
 
 // initiating views
-    TextView school = (TextView)findViewById(R.id.profileSchoolDisplayTV);
-    TextView name = (TextView)findViewById(R.id.profileNameDisplayTV);
-    TextView time = (TextView)findViewById(R.id.profileTimesDisplayTV);
-    TextView groups = (TextView)findViewById(R.id.profileListOfGroupsDisplayTV);
-    TextView email = (TextView)findViewById(R.id.profileEmailDisplayTV);
+
 
     public void populateProfie(){
         //get name from database
