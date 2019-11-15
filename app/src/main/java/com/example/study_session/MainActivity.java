@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showGroupSearch(View view){
         Intent showGroupSearch = new Intent(this,GroupSearchActivity.class);
+        showGroupSearch.putExtra("school", school);
         startActivity(showGroupSearch);
     }
 

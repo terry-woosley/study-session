@@ -1,8 +1,10 @@
 package com.example.study_session;
 
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,7 +23,11 @@ import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
+
 public class Group {
+    interface CallBackFunction {
+        public void done();
+    }
     String groupName;
     String groupSchool;
     String groupCreator;
@@ -104,9 +110,8 @@ public class Group {
                 });
     }
 
-    public static ArrayList<Group> getGroupsFromReference(List<String> groupReferences) {
+    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final ArrayList<Group> groupArrayList = new ArrayList<>();
         for (int i = 0; i < groupReferences.size(); i++) {
             db.collection("groups").whereEqualTo("id", groupReferences.get(i))
                     .get()
@@ -123,6 +128,7 @@ public class Group {
                                     String groupSubject = (String) document.get("groupSubject");
                                     groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
                                     Log.d(TAG, document.getId() + " => " + document.getData());
+                                    callBackFunction.done();
                                 }
                             } else {
                                 Log.d(TAG, "Error getting document: ", task.getException());
@@ -130,12 +136,10 @@ public class Group {
                         }
                     });
         }
-        return groupArrayList;
     }
     
-    public ArrayList<Group> getGroupsFromUniversity(final String school){
+    public static void getGroupsFromUniversity(final String school, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final ArrayList<Group> groupArrayList= new ArrayList<Group>();
         db.collection("groups").whereEqualTo("groupSchool", school)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -144,16 +148,19 @@ public class Group {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String groupName = (String) document.get("groupName");
+                                String groupSchool = (String) document.get("groupSchool");
                                 String groupCreator = (String) document.get("groupCreator");
+                                ArrayList<Date> groupTimesAvailable = (ArrayList<Date>) document.get("groupTimesAvailable");
+                                ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                                 String groupSubject = (String) document.get("groupSubject");
-                                groupArrayList.add(new Group(groupName, school, groupCreator,null,null,groupSubject));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                                Log.d(TAG, document.getId() + " => " + document.get("groupName"));
                             }
+                            callBackFunction.done();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-        return groupArrayList;
     }
 }

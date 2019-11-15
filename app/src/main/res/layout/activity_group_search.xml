@@ -23,32 +23,30 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <SearchView
-        android:id="@+id/searchSV"
-        android:layout_width="match_parent"
-        android:layout_height="569dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="64dp"
-        android:onClick="showGroup"
-        android:tag="sdfasdf"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/groupsRV"
+        android:layout_width="409dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backBTN"
-        app:layout_constraintVertical_bias="0.956" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01999998" />
 
     <EditText
         android:id="@+id/searchET"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginBottom="4dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="582dp"
+        android:layout_marginBottom="104dp"
         android:ems="10"
         android:hint="Search"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchSV" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
