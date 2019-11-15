@@ -18,12 +18,12 @@ This application uses Cloud Firebase for all back-end services
  * User login information will persist on the local machine via SharedPreferences to allow auto login feature
  
 ### Remote Firebase Data
- * User's available study time's and jined study groups
- * Study Group's name, time, creatore, members, and other attributes relating to the groups
+ * User's available study time's and joined study groups
+ * Study Group's name, time, creator, members, and other attributes relating to the groups
  
 ## Testing Credentials
 
-Use the folling account information to login into the application (Testin purposes only)
+Use the following account information to login into the application (Testing purposes only)
 
  * Email: test@user.com
  * Password: TestPassword123!
