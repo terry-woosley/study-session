@@ -3,6 +3,7 @@ package com.example.study_session.ui.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +25,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+
+import javax.xml.transform.Result;
 
 public class RegisterNewUser extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -39,9 +49,10 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             Pattern.compile(EMAIL_REGEX);
     private EditText emailView,passwordView,userView;
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
     private FirebaseFirestore db;
     private ProgressBar spinner;
-    private String userSchool,userName, day;
+    private String userSchool,userName, day, email, password;
     private TimePicker timePicker;
     private ArrayList<Date> timesAvailable;
     private boolean timeFlag = false;
@@ -80,8 +91,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
             public void onClick(View v) {
                 //Checks fields are non-null and inputs are valid
                 try {
-                    String email = emailView.getText().toString();
-                    String password = passwordView.getText().toString();
+                    email = emailView.getText().toString();
+                    password = passwordView.getText().toString();
                     userName = userView.getText().toString();
 
                     if (!isEmailValid(email)) {
@@ -96,7 +107,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                         Toast.makeText(getApplicationContext(), getString(R.string.no_time), Toast.LENGTH_SHORT).show();
                     }else {
                         spinner.setVisibility(View.VISIBLE);
-                        createAccount(email, password);
+                        db = FirebaseFirestore.getInstance();
+                        new CreateAccount().execute();
                     }
                 }
                 catch (NullPointerException e){
@@ -131,58 +143,6 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                 timeFlag = true;
             }
         });
-    }
-
-    /**
-     * Creates a unique Firebase account with the user's email and password
-     *
-     * @param email the user's valid email
-     * @param password the user's valid password
-     */
-    public void createAccount(String email, String password){
-        //TODO add logic for validating user email
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            spinner.setVisibility(View.GONE);
-                            Log.d("CreateUser", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            db = FirebaseFirestore.getInstance();
-
-                            //Populate database with user data using uid as document key
-                            Profile profile = new Profile(userName,userSchool,timesAvailable);
-                            db.collection("users").document(user.getUid())
-                                    .set(profile)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d("Adding User Info", "DocumentSnapshot successfully written!");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("Adding User Info", "Error writing document", e);
-                                        }
-                                    });
-
-                            //Pass user information to main activity
-                            Intent successIntent = new Intent();
-                            successIntent.putExtra("userName", userName);
-                            successIntent.putExtra("school", userSchool);
-                            successIntent.putExtra("uid", user.getUid());
-                            setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
-                            finish();
-                        } else {
-                            spinner.setVisibility(View.GONE);
-                            Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(),"Failed to create account.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     /**
@@ -224,5 +184,62 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     //This is only here to not make the interface call angry
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+    private class CreateAccount extends AsyncTask<String, String, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                spinner.setVisibility(View.GONE);
+                                Log.d("CreateUser", "createUserWithEmail:success");
+                                user = mAuth.getCurrentUser();
+
+                                new AddData().execute();
+                                //Pass user information to main activity
+                                Intent successIntent = new Intent();
+                                successIntent.putExtra("userName", userName);
+                                successIntent.putExtra("school", userSchool);
+                                successIntent.putExtra("uid", user.getUid());
+                                setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
+                                finish();
+                            } else {
+                                spinner.setVisibility(View.GONE);
+                                Log.w("CreateTag", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(getApplicationContext(),"Failed to create account.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            return null;
+        }
+    }
+
+    private class AddData extends AsyncTask<String, String, Void> {
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            Profile profile = new Profile(userName,userSchool,timesAvailable);
+            db.collection("users").document(user.getUid())
+                    .set(profile)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Adding User Info", "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            spinner.setVisibility(View.GONE);
+                            Log.w("Adding User Info", "Error writing document", e);
+                        }
+                    });
+            return null;
+        }
     }
 }
