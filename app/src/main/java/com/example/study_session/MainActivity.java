@@ -6,15 +6,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import com.example.study_session.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Group.CallBackFunction{
 
     private String userName,school,uid;
+    //TODO: Populate the value of userGroup with the user's groups
     private List<String> userGroups;
     private ArrayList<Group> groups;
 
@@ -28,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
+
         /*
-        //TODO: Call getGroupsFromReference here somehow?
-        groups = Group.getGroupsFromReference(userGroups);
+        Group.getGroupsFromReference(userGroups, groups);
 
         //bind GroupViewAdapter for group list
         GroupViewAdapter groupServer = new GroupViewAdapter(groups);
@@ -39,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         //bind layoutManager for group list
         LinearLayoutManager groupManager = new LinearLayoutManager(this);
         groupsRV.setLayoutManager(groupManager);
-        */
+         */
+
     }
 
     /**
@@ -90,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
     public void showGroup(View view){
         Intent showGroup = new Intent(this,GroupActivity.class);
         startActivity(showGroup);
+    }
+
+    @Override
+    public void done() {
+        Log.d("LOG", "Groups array list retrieved! " + groups);
     }
 
     //Stubbed

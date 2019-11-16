@@ -72,7 +72,7 @@ public class Group {
     }
 
     public void joinGroup(String uid, String groupID){
-        //TODO: Retrive user id, get reference to group, update member array of group with user id
+        //TODO: Retrieve user id, get reference to group, update member array of group with user id
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference groupDoc = db.collection("groups").document(groupID);
         final ArrayList<String> groupMembersList = new ArrayList<>();
@@ -83,9 +83,7 @@ public class Group {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
-                        for(int i = 0; i < groupMembers.size(); i++) {
-                            groupMembersList.add(groupMembers.get(i));
-                        }
+                        groupMembersList.addAll(groupMembers);
                     }
                 } else {
                     Log.d(TAG, "Error getting document: ", task.getException());
