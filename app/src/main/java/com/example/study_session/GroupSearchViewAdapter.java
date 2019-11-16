@@ -2,6 +2,8 @@ package com.example.study_session;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -10,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchViewAdapter.GroupViewHolder> {
+public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchViewAdapter.GroupViewHolder> implements Filterable {
+
     public static class GroupViewHolder extends RecyclerView.ViewHolder{
 
         private LinearLayout groupViewHolder;
@@ -22,10 +25,12 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
     }
 
     private ArrayList<Group> groupList;
+    public static ArrayList<Group> filteredGroupList;
 
     public GroupSearchViewAdapter(ArrayList<Group> groupList){
         super();
         this.groupList = groupList;
+        filteredGroupList = groupList;
     }
 
     @NonNull
@@ -40,14 +45,49 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
         TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.groupNameTV);
         TextView subjectTV = holder.groupViewHolder.findViewById(R.id.subjectTV);
 
-        groupNameTV.setText(groupList.get(position).groupName);
-        subjectTV.setText(groupList.get(position).groupSubject);
+        groupNameTV.setText(filteredGroupList.get(position).groupName);
+        subjectTV.setText(filteredGroupList.get(position).groupSubject);
     }
 
     @Override
     public int getItemCount() {
 
-        return groupList.size();
+        return filteredGroupList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                String charString = constraint.toString();
+
+                if (charString.isEmpty()){
+                    filteredGroupList = groupList;
+                }else{
+
+                    ArrayList<Group> filterList = new ArrayList<>();
+
+                    for (Group data : groupList){
+
+                        if (data.groupName.toLowerCase().contains(charString)){
+                            filterList.add(data);
+                        }
+                    }
+
+                    filteredGroupList = filterList;
+
+                }
+
+                return new FilterResults();
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                notifyDataSetChanged();
+            }
+        };
     }
 
 }

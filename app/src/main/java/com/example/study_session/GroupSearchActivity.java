@@ -1,16 +1,22 @@
 package com.example.study_session;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -56,6 +62,23 @@ public class GroupSearchActivity extends AppCompatActivity {
             }
         });
 
+        TextView searchBar = findViewById(R.id.searchET);
+        searchBar.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if (groupSearchViewAdapter != null){
+                    groupSearchViewAdapter.getFilter().filter(s);
+                }
+
+            }
+        });
     }
 
     public void showGroup(View view) {
@@ -75,12 +98,14 @@ public class GroupSearchActivity extends AppCompatActivity {
                 RecyclerView.ViewHolder holder = groupsViewRV.getChildViewHolder(view);
                 if (holder instanceof GroupSearchViewAdapter.GroupViewHolder) {
                     int position = holder.getAdapterPosition();
-                    //TODO when the user click on a group
-
+                    Intent intent = new Intent(getBaseContext(),GroupActivity.class);
+                    intent.putExtra("group", GroupSearchViewAdapter.filteredGroupList.get(position));
+                    startActivity(intent);
                     return true;
                 }
             }
             return false;
         }
     }
+
 }

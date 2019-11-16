@@ -71,15 +71,15 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
 
     public void createGroup(View view){
         Intent createGroup = new Intent(this,GroupCreateActivity.class);
-        school = createGroup.getStringExtra("school");
-        uid = createGroup.getStringExtra("uid");
+        createGroup.putExtra("school",school);
+        createGroup.putExtra("uid",uid);
         startActivity(createGroup);
     }
 
     public void showProfile(View view){
         Intent showProfile = new Intent(this,ProfileActivity.class);
         showProfile.putExtra("school",school);
-       showProfile.putExtra("uid",uid);
+        showProfile.putExtra("uid",uid);
         showProfile.putExtra("username",userName);
         startActivity(showProfile);
     }

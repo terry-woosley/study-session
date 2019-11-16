@@ -1,10 +1,8 @@
 package com.example.study_session;
 
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -16,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.Map;
 import static android.content.ContentValues.TAG;
 
 
-public class Group {
+public class Group implements Serializable {
     interface CallBackFunction {
         public void done();
     }
@@ -44,7 +43,7 @@ public class Group {
         this.groupSubject = subject;
     }
 
-    public void addNewGroup(){
+    public void addNewGroup(final CallBackFunction callBackFunction){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> group = new HashMap<>();
@@ -60,6 +59,7 @@ public class Group {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        callBackFunction.done();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })

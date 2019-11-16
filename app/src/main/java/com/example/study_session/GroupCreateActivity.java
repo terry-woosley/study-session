@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -37,15 +38,16 @@ public class GroupCreateActivity extends AppCompatActivity {
                 EditText weekdayET = findViewById(R.id.weekdayTimeET);
                 EditText hourET = findViewById(R.id.hourTimeET);
                 String hourString = hourET.getText().toString();
-                Integer hour = Integer.parseInt(hourString);
+                Integer hour = Integer.parseInt(hourString.replaceAll("[^\\d.]", ""));
                 EditText minuteET = findViewById(R.id.minuteTimeET);
                 String minuteString = minuteET.getText().toString();
-                Integer minute = Integer.parseInt(minuteString);
+                Integer minute = Integer.parseInt(minuteString.replaceAll("[^\\d.]", ""));
                 EditText amPmET = findViewById(R.id.amPmET);
                 //parse date and add it to timesAvailable
                 Date date = new Date(weekdayET.getText().toString(), hour, minute, amPmET.getText().toString());
                 timesAvailable.add(date);
                 Log.d("LOG", "Date " + date.dateToText() + " added to times available");
+
             }
         });
 
@@ -53,7 +55,13 @@ public class GroupCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, null, groupSubjectET.getText().toString());
-                group.addNewGroup();
+                group.addNewGroup(new Group.CallBackFunction() {
+                    @Override
+                    public void done() {
+                        Toast.makeText(getApplicationContext(), "Group Created", Toast.LENGTH_LONG).show();
+                    }
+                });
+                finish();
             }
         });
     }

@@ -1,7 +1,10 @@
 package com.example.study_session;
 
-public class Date {
-    public class Time{
+import java.io.Serializable;
+
+public class Date implements Serializable{
+
+    public class Time implements Serializable {
         public int hour;
         public int minute;
         public String meridiem;
