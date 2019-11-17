@@ -26,6 +26,7 @@ import static android.content.ContentValues.TAG;
 public class Group implements Serializable {
     interface CallBackFunction {
         public void done();
+        public void error(Exception e);
     }
     String groupName;
     String groupSchool;
@@ -39,7 +40,11 @@ public class Group implements Serializable {
         this.groupSchool = school;
         this.groupCreator = creator;
         this.groupTimesAvailable = timesAvailable;
-        this.groupMembers = members;
+        if (members != null){
+            this.groupMembers = members;
+        }else {
+            this.groupMembers = new ArrayList<String>();
+        }
         this.groupSubject = subject;
     }
 
@@ -67,45 +72,47 @@ public class Group implements Serializable {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+                        callBackFunction.error(e);
                     }
                 });
     }
 
-    public void joinGroup(String uid, String groupID){
-        //TODO: Retrieve user id, get reference to group, update member array of group with user id
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference groupDoc = db.collection("groups").document(groupID);
+    static public void joinGroup(final String uid, final Group group, final CallBackFunction callBackFunction){
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final ArrayList<String> groupMembersList = new ArrayList<>();
         //retrieve members list from referenced group
-        db.collection("groups").whereEqualTo("id", groupID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("groups").whereEqualTo("groupName",group.groupName)
+                .whereEqualTo("groupSchool",group.groupSchool).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         groupMembersList.addAll(groupMembers);
+                        groupMembersList.add(uid);
+                        DocumentReference groupDoc = db.collection("groups").document(document.getId());
+                        //update field in groupMembers with new group members list
+                        groupDoc.update("groupMembers", groupMembersList)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    callBackFunction.done();
+                                    Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error updating document", e);
+                                }
+                            });
                     }
                 } else {
                     Log.d(TAG, "Error getting document: ", task.getException());
+                    callBackFunction.error(task.getException());
                 }
             }
         });
-        //add new member to list
-        groupMembersList.add(uid);
-        //update field in groupMembers with new group members list
-        groupDoc.update("groupMembers", groupMembersList)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully updated!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
-                    }
-                });
     }
 
     public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
@@ -130,6 +137,7 @@ public class Group implements Serializable {
                                 }
                             } else {
                                 Log.d(TAG, "Error getting document: ", task.getException());
+                                callBackFunction.error(task.getException());
                             }
                         }
                     });
@@ -157,6 +165,7 @@ public class Group implements Serializable {
                             callBackFunction.done();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
+                            callBackFunction.error(task.getException());
                         }
                     }
                 });

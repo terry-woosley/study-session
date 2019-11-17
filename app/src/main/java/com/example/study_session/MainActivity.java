@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
     public void showGroupSearch(View view){
         Intent showGroupSearch = new Intent(this,GroupSearchActivity.class);
         showGroupSearch.putExtra("school", school);
+        showGroupSearch.putExtra("uid",uid);
         startActivity(showGroupSearch);
     }
 
@@ -98,6 +99,11 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
     @Override
     public void done() {
         Log.d("LOG", "Groups array list retrieved! " + groups);
+    }
+
+    @Override
+    public void error(Exception e) {
+
     }
 
     //Stubbed

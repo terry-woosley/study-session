@@ -54,11 +54,15 @@ public class GroupCreateActivity extends AppCompatActivity {
         createGroupBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, null, groupSubjectET.getText().toString());
+                Group group = new Group(groupNameET.getText().toString(), school, uid, timesAvailable, new ArrayList<String>(), groupSubjectET.getText().toString());
                 group.addNewGroup(new Group.CallBackFunction() {
                     @Override
                     public void done() {
                         Toast.makeText(getApplicationContext(), "Group Created", Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void error(Exception e) {
+                        Toast.makeText(getApplicationContext(),"Error occurred! Please try again!",Toast.LENGTH_SHORT).show();
                     }
                 });
                 finish();

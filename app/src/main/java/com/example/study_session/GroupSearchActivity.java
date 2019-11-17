@@ -17,11 +17,11 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class GroupSearchActivity extends AppCompatActivity {
-    ArrayList<Group> groupList = new ArrayList<Group>();
 
     private GestureDetectorCompat detector = null;
 
@@ -29,6 +29,8 @@ public class GroupSearchActivity extends AppCompatActivity {
 
     GroupSearchViewAdapter groupSearchViewAdapter;
 
+    String uid;
+    String school;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +38,13 @@ public class GroupSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_search);
 
         Intent intent = getIntent();
-        String school = intent.getStringExtra("school");
+        school = intent.getStringExtra("school");
+        uid = intent.getStringExtra("uid");
 
-        Group.getGroupsFromUniversity(school, groupList, new Group.CallBackFunction() {
-            @Override
-            public void done() {
-                groupSearchViewAdapter.notifyDataSetChanged();
-
-            }
-        });
+        this.getGroups();
 
         groupsViewRV = findViewById(R.id.groupsRV);
-        groupSearchViewAdapter = new GroupSearchViewAdapter(groupList);
+        groupSearchViewAdapter = new GroupSearchViewAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         groupsViewRV.setAdapter(groupSearchViewAdapter);
         groupsViewRV.setLayoutManager(linearLayoutManager);
@@ -80,10 +77,29 @@ public class GroupSearchActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.getGroups();
+    }
 
     public void showGroup(View view) {
         Intent showGroup = new Intent(this, GroupActivity.class);
         startActivity(showGroup);
+    }
+
+    public void getGroups(){
+        GroupSearchViewAdapter.filteredGroupList = new ArrayList<Group>();
+        Group.getGroupsFromUniversity(school, GroupSearchViewAdapter.filteredGroupList, new Group.CallBackFunction() {
+            @Override
+            public void done() {
+                groupSearchViewAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void error(Exception e) {
+                Toast.makeText(getApplicationContext(),"Error occurred! Please try again!",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void showMain(View view) {
@@ -100,6 +116,8 @@ public class GroupSearchActivity extends AppCompatActivity {
                     int position = holder.getAdapterPosition();
                     Intent intent = new Intent(getBaseContext(),GroupActivity.class);
                     intent.putExtra("group", GroupSearchViewAdapter.filteredGroupList.get(position));
+                    intent.putExtra("join",true);
+                    intent.putExtra("uid",uid);
                     startActivity(intent);
                     return true;
                 }

@@ -25,12 +25,13 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
     }
 
     private ArrayList<Group> groupList;
+
     public static ArrayList<Group> filteredGroupList;
 
-    public GroupSearchViewAdapter(ArrayList<Group> groupList){
+    public GroupSearchViewAdapter(){
         super();
-        this.groupList = groupList;
-        filteredGroupList = groupList;
+        this.groupList = new ArrayList<Group>();
+        filteredGroupList = new ArrayList<Group>();
     }
 
     @NonNull
@@ -77,7 +78,6 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
                     }
 
                     filteredGroupList = filterList;
-
                 }
 
                 return new FilterResults();
