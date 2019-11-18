@@ -67,14 +67,13 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.loading);
         loginButton = findViewById(R.id.login);
         checkBox = findViewById(R.id.rememberCheck);
-//TODO UNCOMMIT AFTER TESTING
-//        //Checks SharedPreferences for remembered user, logs user in if true
-//        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
-//        if (sp.contains("isChecked")){
-//            if (sp.getBoolean("isChecked", false))
-//            restoreSharedPreferences(findViewById(R.id.container));
-//            logUserIn(email, password);
-//        }
+        //Checks SharedPreferences for remembered user, logs user in if true
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        if (sp.contains("isChecked")){
+            if (sp.getBoolean("isChecked", false))
+            restoreSharedPreferences(findViewById(R.id.container));
+            logUserIn(email, password);
+        }
 
         //Listens for changes in the email field and updates error message if needed
         userEmailText.addTextChangedListener(new TextWatcher() {
