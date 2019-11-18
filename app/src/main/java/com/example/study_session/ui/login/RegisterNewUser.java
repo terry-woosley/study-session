@@ -108,7 +108,7 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                     }else {
                         spinner.setVisibility(View.VISIBLE);
                         db = FirebaseFirestore.getInstance();
-                        new CreateAccount().execute();
+                        checkUsername();
                     }
                 }
                 catch (NullPointerException e){
@@ -166,6 +166,31 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
     }
 
     /**
+     * Checks if the given userName has already been used.
+     */
+    public void checkUsername(){
+        db.collection("users")
+                .whereEqualTo("name", userName)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getDocuments().size() > 0) {
+                                Log.d("Username Collision", "Username already exists");
+                                spinner.setVisibility(View.GONE);
+                                Toast.makeText(getApplicationContext(), "Username already used",Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Log.d("No Username Collision", "Username available");
+                                new CreateAccount().execute();
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
      * Handles selecting in a spinner
      */
     public void onItemSelected(AdapterView<?> parent, View view,
@@ -186,6 +211,9 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         // Another interface callback
     }
 
+    /**
+     * Creates the user account with the given email and password
+     */
     private class CreateAccount extends AsyncTask<String, String, Void> {
 
         @Override
@@ -219,6 +247,9 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
         }
     }
 
+    /**
+     * Adds the user's information to the database
+     */
     private class AddData extends AsyncTask<String, String, Void> {
 
         @Override
