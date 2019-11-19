@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Handles the binding of the adapter and layout for the groups recycler view
+     */
     public void bindGroupsRecyclerView(){
 
         if(userGroups != null) {
