@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -27,7 +28,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -280,6 +286,10 @@ public class LoginActivity extends AppCompatActivity {
                                             userLogin.putExtra("userName", document.get("name").toString());
                                             userLogin.putExtra("school", document.get("school").toString());
                                             userLogin.putExtra("uid",user.getUid());
+                                            //retrieve group reference list
+                                            ArrayList<String> userGroups = (ArrayList<String>)document.get("groups");
+                                            userLogin.putStringArrayListExtra("groups", userGroups);
+                                            
                                             updateUiWithUser(userLogin);
                                             setResult(LOGIN_SUCCESS, userLogin);
                                             if (checkBox.isChecked()){

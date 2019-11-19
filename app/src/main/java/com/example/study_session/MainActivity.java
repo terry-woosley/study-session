@@ -16,8 +16,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements Group.CallBackFunction{
 
     private String userName,school,uid;
-    //TODO: Populate the value of userGroup with the user's groups
-    private List<String> userGroups;
+    private ArrayList<String> userGroups;
     private ArrayList<Group> groups;
 
 
@@ -30,19 +29,21 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
+        if(userGroups != null) {
+            groups = Group.getGroupsFromReference(userGroups);
+        }
 
-        /*
-        Group.getGroupsFromReference(userGroups, groups);
-
-        //bind GroupViewAdapter for group list
-        GroupViewAdapter groupServer = new GroupViewAdapter(groups);
-        RecyclerView groupsRV = findViewById(R.id.groupsRV);
-        groupsRV.setAdapter(groupServer);
-        //bind layoutManager for group list
-        LinearLayoutManager groupManager = new LinearLayoutManager(this);
-        groupsRV.setLayoutManager(groupManager);
-         */
-
+        if(groups != null) {
+            //bind GroupViewAdapter for group list
+            GroupViewAdapter groupServer = new GroupViewAdapter(groups);
+            RecyclerView groupsRV = findViewById(R.id.groupsRV);
+            groupsRV.setAdapter(groupServer);
+            //bind layoutManager for group list
+            LinearLayoutManager groupManager = new LinearLayoutManager(this);
+            groupsRV.setLayoutManager(groupManager);
+        }
+        //TODO: both variables currently returning null
+        Log.d("MAIN", "Current groups lists. userGroups: " + userGroups + " groups: " + groups);
     }
 
     /**
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
-            userGroups = getUserGroups(uid);
+            userGroups = profile.getStringArrayListExtra("groups");
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
@@ -106,8 +107,4 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
 
     }
 
-    //Stubbed
-    public List<String> getUserGroups(String uid){
-        return null;
-    }
 }

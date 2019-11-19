@@ -28,6 +28,7 @@ public class Group implements Serializable {
         public void done();
         public void error(Exception e);
     }
+
     String groupName;
     String groupSchool;
     String groupCreator;
@@ -115,8 +116,9 @@ public class Group implements Serializable {
         });
     }
 
-    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
+    public static ArrayList<Group> getGroupsFromReference(List<String> groupReferences) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<Group> groupArrayList = new ArrayList<>();
         for (int i = 0; i < groupReferences.size(); i++) {
             db.collection("groups").whereEqualTo("id", groupReferences.get(i))
                     .get()
@@ -133,15 +135,14 @@ public class Group implements Serializable {
                                     String groupSubject = (String) document.get("groupSubject");
                                     groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
                                     Log.d(TAG, document.getId() + " => " + document.getData());
-                                    callBackFunction.done();
                                 }
                             } else {
                                 Log.d(TAG, "Error getting document: ", task.getException());
-                                callBackFunction.error(task.getException());
                             }
                         }
                     });
         }
+        return groupArrayList;
     }
     
     public static void getGroupsFromUniversity(final String school, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction){
