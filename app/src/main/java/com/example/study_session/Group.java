@@ -116,7 +116,7 @@ public class Group implements Serializable {
         });
     }
 
-    public static ArrayList<Group> getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
+    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (int i = 0; i < groupReferences.size(); i++) {
             db.collection("groups").whereEqualTo("id", groupReferences.get(i))
@@ -143,7 +143,6 @@ public class Group implements Serializable {
                         }
                     });
         }
-        return groupArrayList;
     }
     
     public static void getGroupsFromUniversity(final String school, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction){
