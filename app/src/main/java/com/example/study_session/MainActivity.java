@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        groups = new ArrayList<>();
+
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
-
-        bindGroupsRecyclerView();
     }
 
     /**
@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity{
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
-            userGroups = profile.getStringArrayListExtra("groups");
+            userGroups = profile.getExtras().getStringArrayList("groups");
+            Log.d("MAIN", "Retrieved intent: (" + userName + school +  uid + " User Groups: " + userGroups);
+            bindGroupsRecyclerView();
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity{
     public void bindGroupsRecyclerView(){
 
         if(userGroups != null) {
-            groups = Group.getGroupsFromReference(userGroups, new Group.CallBackFunction() {
+            Group.getGroupsFromReference(userGroups, groups, new Group.CallBackFunction() {
                 @Override
                 public void done() {
                     Log.d("MAIN", "groups retrieved from login " + groups);
