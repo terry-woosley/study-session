@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity{
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
             userGroups = profile.getExtras().getStringArrayList("groups");
-            Log.d("MAIN", "Retrieved intent: (" + userName + school +  uid + " User Groups: " + userGroups);
             bindGroupsRecyclerView();
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){

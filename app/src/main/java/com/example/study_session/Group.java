@@ -119,6 +119,31 @@ public class Group implements Serializable {
     public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (int i = 0; i < groupReferences.size(); i++) {
+            DocumentReference docRef = db.collection("groups").document(groupReferences.get(i));
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        String groupName = (String) document.get("groupName");
+                        String groupSchool = (String) document.get("groupSchool");
+                        String groupCreator = (String) document.get("groupCreator");
+                        ArrayList<Date> groupTimesAvailable = (ArrayList<Date>) document.get("groupTimesAvailable");
+                        ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
+                        String groupSubject = (String) document.get("groupSubject");
+                        groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                        if (document.exists()) {
+                            Log.d("GROUP", "DocumentSnapshot data: " + document.getData());
+                        } else {
+                            Log.d("GROUP", "No such document");
+                        }
+                    } else {
+                        Log.d("GROUP", "get failed with ", task.getException());
+                    }
+                }
+            });
+        }
+            /*
             db.collection("groups").whereEqualTo("id", groupReferences.get(i))
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -143,6 +168,7 @@ public class Group implements Serializable {
                         }
                     });
         }
+        */
     }
     
     public static void getGroupsFromUniversity(final String school, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction){
