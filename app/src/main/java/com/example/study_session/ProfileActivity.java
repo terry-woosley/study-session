@@ -18,7 +18,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         TextView schoolSet = (TextView)findViewById(R.id.profileSchoolDisplayTV);
         TextView nameSet = (TextView)findViewById(R.id.profileNameDisplayTV);
-        TextView timeSet = (TextView)findViewById(R.id.profileTimesDisplayTV);
         TextView emailSet = (TextView)findViewById(R.id.profileEmailDisplayTV);
 
         Intent intent = getIntent();
