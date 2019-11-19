@@ -132,6 +132,7 @@ public class Group implements Serializable {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         String groupSubject = (String) document.get("groupSubject");
                         groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                        callBackFunction.done();
                         if (document.exists()) {
                             Log.d("GROUP", "DocumentSnapshot data: " + document.getData());
                         } else {
@@ -139,6 +140,7 @@ public class Group implements Serializable {
                         }
                     } else {
                         Log.d("GROUP", "get failed with ", task.getException());
+                        callBackFunction.error(task.getException());
                     }
                 }
             });
