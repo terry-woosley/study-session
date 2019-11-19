@@ -289,7 +289,7 @@ public class LoginActivity extends AppCompatActivity {
                                             //retrieve group reference list
                                             ArrayList<String> userGroups = (ArrayList<String>)document.get("groups");
                                             userLogin.putStringArrayListExtra("groups", userGroups);
-                                            
+
                                             updateUiWithUser(userLogin);
                                             setResult(LOGIN_SUCCESS, userLogin);
                                             if (checkBox.isChecked()){

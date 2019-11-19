@@ -13,13 +13,11 @@ import com.example.study_session.ui.login.LoginActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements Group.CallBackFunction{
+public class MainActivity extends AppCompatActivity{
 
     private String userName,school,uid;
     private ArrayList<String> userGroups;
     private ArrayList<Group> groups;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +27,7 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
 
-        if(userGroups != null) {
-            groups = Group.getGroupsFromReference(userGroups);
-        }
-
-        if(groups != null) {
-            //bind GroupViewAdapter for group list
-            GroupViewAdapter groupServer = new GroupViewAdapter(groups);
-            RecyclerView groupsRV = findViewById(R.id.groupsRV);
-            groupsRV.setAdapter(groupServer);
-            //bind layoutManager for group list
-            LinearLayoutManager groupManager = new LinearLayoutManager(this);
-            groupsRV.setLayoutManager(groupManager);
-        }
-        //TODO: both variables currently returning null
-        Log.d("MAIN", "Current groups lists. userGroups: " + userGroups + " groups: " + groups);
+        bindGroupsRecyclerView();
     }
 
     /**
@@ -68,6 +52,35 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
             uid = profile.getStringExtra("uid");
             //Start add times/groups
         }
+    }
+
+    public void bindGroupsRecyclerView(){
+
+        if(userGroups != null) {
+            groups = Group.getGroupsFromReference(userGroups, new Group.CallBackFunction() {
+                @Override
+                public void done() {
+                    Log.d("MAIN", "groups retrieved from login " + groups);
+                }
+
+                @Override
+                public void error(Exception e) {
+                    Log.d("MAIN", "groups not retrieved from login " + e);
+                }
+            });
+        }
+
+        if(groups != null) {
+            //bind GroupViewAdapter for group list
+            GroupViewAdapter groupServer = new GroupViewAdapter(groups);
+            RecyclerView groupsRV = findViewById(R.id.groupsRV);
+            groupsRV.setAdapter(groupServer);
+            //bind layoutManager for group list
+            LinearLayoutManager groupManager = new LinearLayoutManager(this);
+            groupsRV.setLayoutManager(groupManager);
+        }
+        //TODO: both variables currently returning null
+        Log.d("MAIN", "Current groups lists. userGroups: " + userGroups + " groups: " + groups);
     }
 
     public void createGroup(View view){
@@ -95,16 +108,6 @@ public class MainActivity extends AppCompatActivity implements Group.CallBackFun
     public void showGroup(View view){
         Intent showGroup = new Intent(this,GroupActivity.class);
         startActivity(showGroup);
-    }
-
-    @Override
-    public void done() {
-        Log.d("LOG", "Groups array list retrieved! " + groups);
-    }
-
-    @Override
-    public void error(Exception e) {
-
     }
 
 }
