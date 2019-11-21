@@ -230,8 +230,8 @@ public class RegisterNewUser extends AppCompatActivity implements AdapterView.On
                                 new AddData().execute();
                                 //Pass user information to main activity
                                 Intent successIntent = new Intent();
-                                successIntent.putExtra("userName", userName);
-                                successIntent.putExtra("school", userSchool);
+                                successIntent.putExtra("email", email);
+                                successIntent.putExtra("password", password);
                                 successIntent.putExtra("uid", user.getUid());
                                 setResult(LoginActivity.SUCCESSFUL_REGISTRATION, successIntent);
                                 finish();

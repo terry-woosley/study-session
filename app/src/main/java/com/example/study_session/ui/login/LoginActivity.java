@@ -143,10 +143,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void onActivityResult(int requestCode,int resultCode,Intent profile){
         if(resultCode == SUCCESSFUL_REGISTRATION){
-            String welcome = getString(R.string.welcome) + profile.getStringExtra("userName");
-            Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-            setResult(SUCCESSFUL_REGISTRATION, profile);
-            finish();
+            logUserIn(profile.getStringExtra("email"), profile.getStringExtra("password"));
         }
         else {
             showRegistrationFail("Failed to create account");
