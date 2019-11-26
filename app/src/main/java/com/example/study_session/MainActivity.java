@@ -53,6 +53,11 @@ public class MainActivity extends AppCompatActivity{
             uid = profile.getStringExtra("uid");
             //Start add times/groups
         }
+        else if (resultCode == LoginActivity.LOGOUT){
+            Intent login = new Intent(this, LoginActivity.class);
+            login.putExtra("requestCode",LoginActivity.LOGOUT );
+            startActivityForResult(login,LoginActivity.LOGOUT);
+        }
     }
 
     /**
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
         showProfile.putExtra("school",school);
         showProfile.putExtra("uid",uid);
         showProfile.putExtra("username",userName);
-        startActivity(showProfile);
+        startActivityForResult(showProfile, ProfileActivity.VIEW_PROFILE);
     }
 
     public void showGroupSearch(View view){

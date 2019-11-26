@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final int REGISTER_USER = 101;
     public static final int SUCCESSFUL_REGISTRATION = 102;
     public static final int LOGIN_SUCCESS = 103;
+    public static final int LOGOUT = 105;
     public static final int LOGIN_ACTIVITY = 104;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -66,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
+        Intent logout = getIntent();
 
         userEmailText = findViewById(R.id.emailView);
         passwordText = findViewById(R.id.passwordView);
@@ -73,12 +76,19 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.loading);
         loginButton = findViewById(R.id.login);
         checkBox = findViewById(R.id.rememberCheck);
+
         //Checks SharedPreferences for remembered user, logs user in if true
-        SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
         if (sp.contains("isChecked")){
-            if (sp.getBoolean("isChecked", false))
-            restoreSharedPreferences(findViewById(R.id.container));
-            logUserIn(email, password);
+            if (sp.getBoolean("isChecked", false)){
+                if (logout.getIntExtra("requestCode", 0) == LOGOUT){
+                    Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_LONG).show();
+                    unCheck(sp);
+                }
+                else {
+                    restoreSharedPreferences(findViewById(R.id.container));
+                    logUserIn(email, password);
+                }
+            }
         }
 
         //Listens for changes in the email field and updates error message if needed
@@ -251,6 +261,19 @@ public class LoginActivity extends AppCompatActivity {
         edit.putString("userEmail",email);
         edit.putString("userPassword", password);
         edit.putBoolean("isChecked", true);
+        edit.apply();
+    }
+
+    /**
+     * Clears the user's saved login information
+     *
+     * @param sp the SharedPreference holding the login information
+     */
+    public void unCheck(SharedPreferences sp){
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putString("userEmail",null);
+        edit.putString("userPassword", null);
+        edit.putBoolean("isChecked", false);
         edit.apply();
     }
 
