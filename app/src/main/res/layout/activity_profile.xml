@@ -32,6 +32,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="300dp">
 
         <Button
@@ -65,9 +68,9 @@
             android:id="@+id/profileEmailDisplayTV"
             android:layout_width="212dp"
             android:layout_height="26dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Email Here"
-            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.15"
@@ -93,35 +96,35 @@
         <ImageView
             android:id="@+id/schoolImage"
             android:layout_width="30dp"
-            android:layout_marginTop="20dp"
             android:layout_height="30dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/ic_school"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.159"/>
+            app:layout_constraintVertical_bias="0.159" />
 
         <ImageView
             android:id="@+id/timeImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_times"
             android:layout_marginTop="20dp"
+            android:src="@drawable/ic_times"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.284"/>
+            app:layout_constraintVertical_bias="0.284" />
 
         <TextView
             android:id="@+id/profileSchoolDisplayTV"
             android:layout_width="329dp"
             android:layout_height="29dp"
-            android:gravity="center"
             android:layout_marginTop="20dp"
+            android:gravity="center"
             android:text="School here"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -132,15 +135,27 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/timesRecycle"
-            android:layout_width="356dp"
+            android:layout_width="334dp"
+            android:layout_height="56dp"
             android:layout_marginTop="20dp"
-            android:layout_height="178dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.545"
+            app:layout_constraintHorizontal_bias="0.389"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.45" />
+            app:layout_constraintVertical_bias="0.307" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/groupsRecycle"
+            android:layout_width="334dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.389"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.507" />
 
         <Button
             android:id="@+id/LogoutBTN"
@@ -154,6 +169,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.958" />
+
+        <ImageView
+            android:id="@+id/groupImage"
+            android:layout_width="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.498"
+            app:srcCompat="@drawable/groups" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
