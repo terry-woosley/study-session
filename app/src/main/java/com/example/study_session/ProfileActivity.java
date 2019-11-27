@@ -2,13 +2,17 @@ package com.example.study_session;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.study_session.ProfileAdapters.GroupListAdapter;
 import com.example.study_session.ui.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,11 +31,13 @@ public class ProfileActivity extends AppCompatActivity {
     public static final int VIEW_PROFILE = 90;
     private String school, username, email, uid;
     private ArrayList<Date> availableTimes;
-    private ArrayList<String> groups;
+    private ArrayList<String> groups = new ArrayList<String>();
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = getApplicationContext();
         user = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
         if (user != null) {
@@ -40,19 +46,18 @@ public class ProfileActivity extends AppCompatActivity {
             TextView nameSet = (TextView)findViewById(R.id.profileNameDisplayTV);
             TextView emailSet = (TextView)findViewById(R.id.profileEmailDisplayTV);
             Intent intent = getIntent();
-            populateProfie(intent);
-
+            populateProfile(intent);
 
             emailSet.setText(email);
             nameSet.setText(username);
             schoolSet.setText(school);
         } else {
-            // No user is signed in
+            logOut(getCurrentFocus());
         }
 
     }
 
-    public void populateProfie(Intent intent){
+    public void populateProfile(Intent intent){
         uid = intent.getStringExtra("uid");
         username = intent.getStringExtra("username");
         school = intent.getStringExtra("school");
@@ -80,6 +85,11 @@ public class ProfileActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         groups = (ArrayList<String>) document.get("groups");
+                        GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
+                        RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
+                        groupsRecycler.setAdapter(groupListAdapter);
+                        LinearLayoutManager myManager = new LinearLayoutManager(context);
+                        groupsRecycler.setLayoutManager(myManager);
                         Log.d("Retrieving Groups", "Group data: " + groups.toString());
                     } else {
                         Log.d("Retrieving Groups", "No such document");
