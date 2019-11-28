@@ -115,6 +115,49 @@ public class Group implements Serializable {
             }
         });
     }
+    static public void leaveGroup(final String uid, final Group group, final CallBackFunction callBackFunction){
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final ArrayList<String> groupMembersList = new ArrayList<>();
+        //retrieve members list from referenced group
+        db.collection("groups").whereEqualTo("groupName",group.groupName)
+                .whereEqualTo("groupSchool",group.groupSchool).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
+                        int i = 0;
+                        for (String id:groupMembers) {
+                            if(id.equals(uid))
+                                break;
+                            i++;
+                        }
+                        groupMembers.remove(i);
+                        groupMembersList.addAll(groupMembers);
+                        DocumentReference groupDoc = db.collection("groups").document(document.getId());
+                        //update field in groupMembers with new group members list
+                        groupDoc.update("groupMembers", groupMembersList)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        callBackFunction.done();
+                                        Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error updating document", e);
+                                    }
+                                });
+                    }
+                } else {
+                    Log.d(TAG, "Error getting document: ", task.getException());
+                    callBackFunction.error(task.getException());
+                }
+            }
+        });
+    }
 
     public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
