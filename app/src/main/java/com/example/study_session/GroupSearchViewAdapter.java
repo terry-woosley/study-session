@@ -43,7 +43,7 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
 
     @Override
     public void onBindViewHolder(@NonNull GroupSearchViewAdapter.GroupViewHolder holder, int position) {
-        TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.groupNameTV);
+        TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.memberNameTV);
         TextView subjectTV = holder.groupViewHolder.findViewById(R.id.subjectTV);
 
         groupNameTV.setText(filteredGroupList.get(position).groupName);

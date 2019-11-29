@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity{
         Intent showGroupSearch = new Intent(this,GroupSearchActivity.class);
         showGroupSearch.putExtra("school", school);
         showGroupSearch.putExtra("uid",uid);
+        showGroupSearch.putExtra("username",userName);
         startActivity(showGroupSearch);
     }
 

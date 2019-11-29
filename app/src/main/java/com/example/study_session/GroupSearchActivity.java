@@ -31,6 +31,7 @@ public class GroupSearchActivity extends AppCompatActivity {
 
     String uid;
     String school;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class GroupSearchActivity extends AppCompatActivity {
         Intent intent = getIntent();
         school = intent.getStringExtra("school");
         uid = intent.getStringExtra("uid");
+        username = intent.getStringExtra("username");
 
         this.getGroups();
 
@@ -119,6 +121,7 @@ public class GroupSearchActivity extends AppCompatActivity {
                     intent.putExtra("group", GroupSearchViewAdapter.filteredGroupList.get(position));
                     intent.putExtra("join",true);
                     intent.putExtra("uid",uid);
+                    intent.putExtra("username",username);
                     startActivity(intent);
                     return true;
                 }

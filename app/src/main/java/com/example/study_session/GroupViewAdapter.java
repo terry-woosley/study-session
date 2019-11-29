@@ -39,7 +39,7 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
 
     @Override
     public void onBindViewHolder(@NonNull GroupViewAdapter.GroupViewViewHolder holder, int position) {
-        TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.groupNameTV);
+        TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.memberNameTV);
         TextView subjectTV = holder.groupViewHolder.findViewById(R.id.subjectTV);
         TextView schoolTV = holder.groupViewHolder.findViewById(R.id.schoolTV);
 
