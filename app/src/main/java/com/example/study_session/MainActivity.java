@@ -66,9 +66,18 @@ public class MainActivity extends AppCompatActivity{
     public void bindGroupsRecyclerView(){
 
         if(userGroups != null) {
-            Group.getGroupsFromReference(userGroups, groups, new Group.CallBackFunction() {
+            //bind GroupViewAdapter for group list
+            final GroupViewAdapter groupServer = new GroupViewAdapter(groups);
+            RecyclerView groupsRV = findViewById(R.id.groupsRV);
+            groupsRV.setAdapter(groupServer);
+            //bind layoutManager for group list
+            LinearLayoutManager groupManager = new LinearLayoutManager(this);
+            groupsRV.setLayoutManager(groupManager);
+
+            Group.getGroupsFromReference(userGroups, groups, new Group.MultipleGroupsCallBackFunction() {
                 @Override
-                public void done() {
+                public void done(int index) {
+                    groupServer.notifyItemInserted(index);
                     Log.d("MAIN", "groups retrieved from login " + groups);
                 }
 
@@ -77,16 +86,7 @@ public class MainActivity extends AppCompatActivity{
                     Log.d("MAIN", "groups not retrieved from login " + e);
                 }
             });
-        }
 
-        if(groups != null) {
-            //bind GroupViewAdapter for group list
-            GroupViewAdapter groupServer = new GroupViewAdapter(groups);
-            RecyclerView groupsRV = findViewById(R.id.groupsRV);
-            groupsRV.setAdapter(groupServer);
-            //bind layoutManager for group list
-            LinearLayoutManager groupManager = new LinearLayoutManager(this);
-            groupsRV.setLayoutManager(groupManager);
         }
         //TODO: both variables currently returning null
         Log.d("MAIN", "Current groups lists. userGroups: " + userGroups + " groups: " + groups);

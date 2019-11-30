@@ -29,6 +29,11 @@ public class Group implements Serializable {
         public void error(Exception e);
     }
 
+    interface MultipleGroupsCallBackFunction {
+        public void done(int index);
+        public void error(Exception e);
+    }
+
     String groupName;
     String groupSchool;
     String groupCreator;
@@ -159,7 +164,7 @@ public class Group implements Serializable {
         });
     }
 
-    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction) {
+    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final MultipleGroupsCallBackFunction multipleGroupsCallBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (int i = 0; i < groupReferences.size(); i++) {
             DocumentReference docRef = db.collection("groups").document(groupReferences.get(i));
@@ -185,7 +190,7 @@ public class Group implements Serializable {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         String groupSubject = (String) document.get("groupSubject");
                         groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
-                        callBackFunction.done();
+                        multipleGroupsCallBackFunction.done(groupArrayList.size()-1);
                         if (document.exists()) {
                             Log.d("GROUP", "DocumentSnapshot data: " + document.getData());
                         } else {
@@ -193,7 +198,7 @@ public class Group implements Serializable {
                         }
                     } else {
                         Log.d("GROUP", "get failed with ", task.getException());
-                        callBackFunction.error(task.getException());
+                        multipleGroupsCallBackFunction.error(task.getException());
                     }
                 }
             });
