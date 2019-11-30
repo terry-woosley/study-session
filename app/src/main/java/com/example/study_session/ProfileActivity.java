@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static final int VIEW_PROFILE = 90;
     private String school, username, email, uid;
     private ArrayList<String> availableTimes = new ArrayList<>();
-    private ArrayList<String> groups = new ArrayList<>();
+    private Vector<String> groups = new Vector<String>();
     private Context context;
 
     @Override
@@ -88,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        groups = (ArrayList<String>) document.get("groups");
+                        groups = (Vector<String>) document.get("groups");
                         GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
                         RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
                         groupsRecycler.setAdapter(groupListAdapter);

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchViewAdapter.GroupViewHolder> implements Filterable {
 
@@ -24,14 +25,14 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
         }
     }
 
-    private ArrayList<Group> groupList;
+    private Vector<Group> groupVector;
 
-    public static ArrayList<Group> filteredGroupList;
+    public static Vector<Group> filteredGroupVector;
 
     public GroupSearchViewAdapter(){
         super();
-        this.groupList = new ArrayList<Group>();
-        filteredGroupList = new ArrayList<Group>();
+        this.groupVector = new Vector<Group>();
+        filteredGroupVector = new Vector<Group>();
     }
 
     @NonNull
@@ -46,14 +47,14 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
         TextView groupNameTV = holder.groupViewHolder.findViewById(R.id.memberNameTV);
         TextView subjectTV = holder.groupViewHolder.findViewById(R.id.subjectTV);
 
-        groupNameTV.setText(filteredGroupList.get(position).groupName);
-        subjectTV.setText(filteredGroupList.get(position).groupSubject);
+        groupNameTV.setText(filteredGroupVector.get(position).groupName);
+        subjectTV.setText(filteredGroupVector.get(position).groupSubject);
     }
 
     @Override
     public int getItemCount() {
 
-        return filteredGroupList.size();
+        return filteredGroupVector.size();
     }
 
     @Override
@@ -65,19 +66,19 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
                 String charString = constraint.toString();
 
                 if (charString.isEmpty()){
-                    filteredGroupList = groupList;
+                    filteredGroupVector = groupVector;
                 }else{
 
-                    ArrayList<Group> filterList = new ArrayList<>();
+                    Vector<Group> filterVector = new Vector<>();
 
-                    for (Group data : groupList){
+                    for (Group data : groupVector){
 
                         if (data.groupName.toLowerCase().contains(charString)){
-                            filterList.add(data);
+                            filterVector.add(data);
                         }
                     }
 
-                    filteredGroupList = filterList;
+                    filteredGroupVector = filterVector;
                 }
 
                 return new FilterResults();

@@ -12,12 +12,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 
 public class GroupActivity extends AppCompatActivity {
 
     Group group;
-    ArrayList<Profile> memberArrayList = new ArrayList<Profile>();
+    Vector<Profile> memberArrayList = new Vector<Profile>();
     GroupMemberViewAdapter groupMemberViewAdapter;
     TextView creatorTV;
     @Override

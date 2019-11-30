@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 public class GroupMemberViewAdapter extends RecyclerView.Adapter<GroupMemberViewAdapter.GroupMemberViewHolder> {
     //subclass for adapting RecyclerView.ViewHolder to new layout
@@ -22,10 +22,10 @@ public class GroupMemberViewAdapter extends RecyclerView.Adapter<GroupMemberView
         }
     }
 
-    private ArrayList<Profile> memberList;
+    private Vector<Profile> memberList;
 
     //constructor
-    public GroupMemberViewAdapter(ArrayList<Profile> g){
+    public GroupMemberViewAdapter(Vector<Profile> g){
         super();
         this.memberList = g;
     }

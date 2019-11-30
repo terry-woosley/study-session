@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import static android.content.ContentValues.TAG;
 
@@ -164,7 +165,7 @@ public class Group implements Serializable {
         });
     }
 
-    public static void getGroupsFromReference(List<String> groupReferences, final ArrayList<Group> groupArrayList, final MultipleGroupsCallBackFunction multipleGroupsCallBackFunction) {
+    public static void getGroupsFromReference(List<String> groupReferences, final Vector<Group> groupVector, final MultipleGroupsCallBackFunction multipleGroupsCallBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (int i = 0; i < groupReferences.size(); i++) {
             DocumentReference docRef = db.collection("groups").document(groupReferences.get(i));
@@ -189,8 +190,8 @@ public class Group implements Serializable {
                         }
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         String groupSubject = (String) document.get("groupSubject");
-                        groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
-                        multipleGroupsCallBackFunction.done(groupArrayList.size()-1);
+                        groupVector.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                        multipleGroupsCallBackFunction.done(groupVector.size()-1);
                         if (document.exists()) {
                             Log.d("GROUP", "DocumentSnapshot data: " + document.getData());
                         } else {
@@ -217,7 +218,7 @@ public class Group implements Serializable {
                                     ArrayList<Date> groupTimesAvailable = (ArrayList<Date>) document.get("groupTimesAvailable");
                                     ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                                     String groupSubject = (String) document.get("groupSubject");
-                                    groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                                    groupVector.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
                                     Log.d("GROUP", "getGroupsFromReference result: " + document.getData());
                                 }
                                 callBackFunction.done();
@@ -231,7 +232,7 @@ public class Group implements Serializable {
         */
     }
     
-    public static void getGroupsFromUniversity(final String school, final ArrayList<Group> groupArrayList, final CallBackFunction callBackFunction){
+    public static void getGroupsFromUniversity(final String school, final Vector<Group> groupVector, final CallBackFunction callBackFunction){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("groups").whereEqualTo("groupSchool", school)
                 .get()
@@ -256,7 +257,7 @@ public class Group implements Serializable {
                                 }
                                 ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                                 String groupSubject = (String) document.get("groupSubject");
-                                groupArrayList.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                                groupVector.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
                                 Log.d(TAG, document.getId() + " => " + document.get("groupName"));
                             }
                             callBackFunction.done();

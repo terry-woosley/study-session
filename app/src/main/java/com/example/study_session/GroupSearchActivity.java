@@ -1,7 +1,6 @@
 package com.example.study_session;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,16 +9,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class GroupSearchActivity extends AppCompatActivity {
 
@@ -92,8 +89,8 @@ public class GroupSearchActivity extends AppCompatActivity {
     }
 
     public void getGroups(){
-        GroupSearchViewAdapter.filteredGroupList = new ArrayList<Group>();
-        Group.getGroupsFromUniversity(school, GroupSearchViewAdapter.filteredGroupList, new Group.CallBackFunction() {
+        GroupSearchViewAdapter.filteredGroupVector = new Vector<Group>();
+        Group.getGroupsFromUniversity(school, GroupSearchViewAdapter.filteredGroupVector, new Group.CallBackFunction() {
             @Override
             public void done() {
                 groupSearchViewAdapter.notifyDataSetChanged();
@@ -118,7 +115,7 @@ public class GroupSearchActivity extends AppCompatActivity {
                 if (holder instanceof GroupSearchViewAdapter.GroupViewHolder) {
                     int position = holder.getAdapterPosition();
                     Intent intent = new Intent(getBaseContext(),GroupActivity.class);
-                    intent.putExtra("group", GroupSearchViewAdapter.filteredGroupList.get(position));
+                    intent.putExtra("group", GroupSearchViewAdapter.filteredGroupVector.get(position));
                     intent.putExtra("join",true);
                     intent.putExtra("uid",uid);
                     intent.putExtra("username",username);

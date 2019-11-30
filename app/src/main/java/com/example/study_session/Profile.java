@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 public class Profile {
     String name;
@@ -65,7 +66,7 @@ public class Profile {
 
     public ArrayList<String> getGroups(){return groups; }
 
-    public static void getUserFromReference(List<String> userReferences, final ArrayList<Profile> userArrayList, final MultipleUserCallBackFunction multipleUserCallBackFunction) {
+    public static void getUserFromReference(List<String> userReferences, final Vector<Profile> profileVector, final MultipleUserCallBackFunction multipleUserCallBackFunction) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         for (int i = 0; i < userReferences.size(); i++) {
             DocumentReference docRef = db.collection("users").document(userReferences.get(i));
@@ -88,8 +89,8 @@ public class Profile {
                             Date newDate = new Date(dayOfTheWeek, hour.intValue(), minute.intValue(), meridien);
                             newUser.timesAvailable.add(newDate);
                         }
-                        userArrayList.add(newUser);
-                        multipleUserCallBackFunction.done(userArrayList.size()-1);
+                        profileVector.add(newUser);
+                        multipleUserCallBackFunction.done(profileVector.size()-1);
                     } else {
                         multipleUserCallBackFunction.error(task.getException());
                     }

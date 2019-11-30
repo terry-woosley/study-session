@@ -12,19 +12,20 @@ import com.example.study_session.ui.login.LoginActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity{
 
     private String userName,school,uid;
     private ArrayList<String> userGroups;
-    private ArrayList<Group> groups;
+    private Vector<Group> groups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        groups = new ArrayList<>();
+        groups = new Vector<Group>();
 
         Intent login = new Intent(this, LoginActivity.class);
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);

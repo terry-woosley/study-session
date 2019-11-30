@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.GroupViewViewHolder> {
     //subclass for adapting RecyclerView.ViewHolder to new layout
@@ -22,10 +23,10 @@ public class GroupViewAdapter extends RecyclerView.Adapter<GroupViewAdapter.Grou
         }
     }
 
-    private ArrayList<Group> groupList;
+    private Vector<Group> groupList;
 
     //constructor
-    public GroupViewAdapter(ArrayList<Group> g){
+    public GroupViewAdapter(Vector<Group> g){
         super();
         this.groupList = g;
     }
