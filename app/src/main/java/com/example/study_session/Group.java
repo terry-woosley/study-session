@@ -179,19 +179,21 @@ public class Group implements Serializable {
                         String groupCreator = (String) document.get("groupCreator");
                         ArrayList<Date> groupTimesAvailable = new ArrayList<Date>();
                         ArrayList<Map<String, Object>> availableDates = (ArrayList<Map<String, Object>>) document.get("groupTimesAvailable");
-                        for (Map<String, Object> date : availableDates){
-                            Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
-                            Long hour = (Long)innerMap.get("hour");
-                            Long minute = (Long)innerMap.get("minute");
-                            String meridien = innerMap.get("meridiem").toString();
-                            String dayOfTheWeek = date.get("dayOfTheWeek").toString();
-                            Date newDate = new Date (dayOfTheWeek,hour.intValue(),minute.intValue(), meridien);
-                            groupTimesAvailable.add(newDate);
+                        if (availableDates != null){
+                            for (Map<String, Object> date : availableDates){
+                                Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
+                                Long hour = (Long)innerMap.get("hour");
+                                Long minute = (Long)innerMap.get("minute");
+                                String meridien = innerMap.get("meridiem").toString();
+                                String dayOfTheWeek = date.get("dayOfTheWeek").toString();
+                                Date newDate = new Date (dayOfTheWeek,hour.intValue(),minute.intValue(), meridien);
+                                groupTimesAvailable.add(newDate);
+                            }
+                            ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
+                            String groupSubject = (String) document.get("groupSubject");
+                            groupVector.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
+                            multipleGroupsCallBackFunction.done(groupVector.size()-1);
                         }
-                        ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
-                        String groupSubject = (String) document.get("groupSubject");
-                        groupVector.add(new Group(groupName, groupSchool, groupCreator, groupTimesAvailable, groupMembers, groupSubject));
-                        multipleGroupsCallBackFunction.done(groupVector.size()-1);
                         if (document.exists()) {
                             Log.d("GROUP", "DocumentSnapshot data: " + document.getData());
                         } else {

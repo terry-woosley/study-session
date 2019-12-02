@@ -90,12 +90,18 @@ public class ProfileActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         groups = (Vector<String>) document.get("groups");
-                        GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
-                        RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
-                        groupsRecycler.setAdapter(groupListAdapter);
-                        LinearLayoutManager myManager = new LinearLayoutManager(context);
-                        groupsRecycler.setLayoutManager(myManager);
-                        Log.d("Retrieving Groups", "Group data: " + groups.toString());
+                        if (groups != null){
+                            GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
+                            RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
+                            groupsRecycler.setAdapter(groupListAdapter);
+                            LinearLayoutManager myManager = new LinearLayoutManager(context);
+                            groupsRecycler.setLayoutManager(myManager);
+                            Log.d("Retrieving Groups", "Group data: " + groups.toString());
+                        }
+                        else {
+                            ArrayList<String> nullArray = new ArrayList<>();
+                            nullArray.add("No groups, join a few!");
+                        }
                     } else {
                         Log.d("Retrieving Groups", "No such document");
                     }
@@ -124,12 +130,14 @@ public class ProfileActivity extends AppCompatActivity {
                             Date newDate = new Date (dayOfTheWeek,hour.intValue(),minute.intValue(), meridien);
                             availableTimes.add(newDate.dateToText());
                         }
-                        TimeAdapter timeAdapter = new TimeAdapter(availableTimes);
-                        RecyclerView timeRecycler = findViewById(R.id.timesRecycle);
-                        timeRecycler.setAdapter(timeAdapter);
-                        LinearLayoutManager myManager = new LinearLayoutManager(context);
-                        timeRecycler.setLayoutManager(myManager);
-                        Log.d("Retrieving Times", "Time data: " + availableTimes.toString());
+                        if (availableTimes != null){
+                            TimeAdapter timeAdapter = new TimeAdapter(availableTimes);
+                            RecyclerView timeRecycler = findViewById(R.id.timesRecycle);
+                            timeRecycler.setAdapter(timeAdapter);
+                            LinearLayoutManager myManager = new LinearLayoutManager(context);
+                            timeRecycler.setLayoutManager(myManager);
+                            Log.d("Retrieving Times", "Time data: " + availableTimes.toString());
+                        }
                     } else {
                         Log.d("Retrieving Times", "No such document");
                     }

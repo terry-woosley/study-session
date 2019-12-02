@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/new_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".EditProfile"></activity>
         <activity android:name=".GroupSearchActivity" />
         <activity android:name=".GroupActivity" />
         <activity android:name=".GroupCreateActivity" />
