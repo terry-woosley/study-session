@@ -7,6 +7,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.study_session.R;
+
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.GroupListViewHolder> {
@@ -19,8 +21,8 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         }
     }
 
-    private Vector<String> model;
-    public GroupListAdapter(Vector<String> model) {
+    private ArrayList<String> model;
+    public GroupListAdapter(ArrayList<String> model) {
         super();
         this.model = model;
     }

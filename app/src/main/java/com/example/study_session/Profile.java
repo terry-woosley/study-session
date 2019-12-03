@@ -80,17 +80,19 @@ public class Profile {
                         newUser.name = (String) document.get("name");
                         newUser.school = (String) document.get("school");
                         ArrayList<Map<String, Object>> availableDates = (ArrayList<Map<String, Object>>) document.get("timesAvailable");
-                        for (Map<String, Object> date : availableDates) {
-                            Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
-                            Long hour = (Long) innerMap.get("hour");
-                            Long minute = (Long) innerMap.get("minute");
-                            String meridien = innerMap.get("meridiem").toString();
-                            String dayOfTheWeek = date.get("dayOfTheWeek").toString();
-                            Date newDate = new Date(dayOfTheWeek, hour.intValue(), minute.intValue(), meridien);
-                            newUser.timesAvailable.add(newDate);
+                        if (availableDates != null){
+                            for (Map<String, Object> date : availableDates) {
+                                Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
+                                Long hour = (Long) innerMap.get("hour");
+                                Long minute = (Long) innerMap.get("minute");
+                                String meridien = innerMap.get("meridiem").toString();
+                                String dayOfTheWeek = date.get("dayOfTheWeek").toString();
+                                Date newDate = new Date(dayOfTheWeek, hour.intValue(), minute.intValue(), meridien);
+                                newUser.timesAvailable.add(newDate);
+                            }
+                            profileVector.add(newUser);
+                            multipleUserCallBackFunction.done(profileVector.size()-1);
                         }
-                        profileVector.add(newUser);
-                        multipleUserCallBackFunction.done(profileVector.size()-1);
                     } else {
                         multipleUserCallBackFunction.error(task.getException());
                     }
@@ -111,16 +113,18 @@ public class Profile {
                         user.name = (String) document.get("name");
                         user.school = (String) document.get("school");
                         ArrayList<Map<String, Object>> availableDates = (ArrayList<Map<String, Object>>) document.get("timesAvailable");
-                        for (Map<String, Object> date : availableDates) {
-                            Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
-                            Long hour = (Long) innerMap.get("hour");
-                            Long minute = (Long) innerMap.get("minute");
-                            String meridien = innerMap.get("meridiem").toString();
-                            String dayOfTheWeek = date.get("dayOfTheWeek").toString();
-                            Date newDate = new Date(dayOfTheWeek, hour.intValue(), minute.intValue(), meridien);
-                            user.timesAvailable.add(newDate);
+                        if (availableDates != null){
+                            for (Map<String, Object> date : availableDates) {
+                                Map<String, Object> innerMap = (Map<String, Object>) date.get("timeOfDay");
+                                Long hour = (Long) innerMap.get("hour");
+                                Long minute = (Long) innerMap.get("minute");
+                                String meridien = innerMap.get("meridiem").toString();
+                                String dayOfTheWeek = date.get("dayOfTheWeek").toString();
+                                Date newDate = new Date(dayOfTheWeek, hour.intValue(), minute.intValue(), meridien);
+                                user.timesAvailable.add(newDate);
+                            }
+                            UserCallBackFunction.done(user);
                         }
-                        UserCallBackFunction.done(user);
                     } else {
                         UserCallBackFunction.error(task.getException());
                     }

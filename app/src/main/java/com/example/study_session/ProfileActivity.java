@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static final int VIEW_PROFILE = 90;
     private String school, username, email, uid;
     private ArrayList<String> availableTimes = new ArrayList<>();
-    private Vector<String> groups = new Vector<String>();
+    private ArrayList<String> groups = new ArrayList<>();
     private Context context;
 
     @Override
@@ -89,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        groups = (Vector<String>) document.get("groups");
+                        groups = (ArrayList<String>) document.get("groups");
                         if (groups != null){
                             GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
                             RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
