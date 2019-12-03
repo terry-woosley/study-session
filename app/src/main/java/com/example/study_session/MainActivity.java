@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity{
             login.putExtra("requestCode",LoginActivity.LOGOUT );
             startActivityForResult(login,LoginActivity.LOGOUT);
         }
+
     }
 
     /**
