@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -93,10 +94,12 @@ public class Group implements Serializable {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    String groupID = new String();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         groupMembersList.addAll(groupMembers);
                         groupMembersList.add(uid);
+                        groupID = document.getId();
                         DocumentReference groupDoc = db.collection("groups").document(document.getId());
                         //update field in groupMembers with new group members list
                         groupDoc.update("groupMembers", groupMembersList)
@@ -114,12 +117,14 @@ public class Group implements Serializable {
                                 }
                             });
                     }
+                    db.collection("users").document(uid).update("groups", FieldValue.arrayUnion(groupID));
                 } else {
                     Log.d(TAG, "Error getting document: ", task.getException());
                     callBackFunction.error(task.getException());
                 }
             }
         });
+
     }
     static public void leaveGroup(final String uid, final Group group, final CallBackFunction callBackFunction){
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -130,6 +135,7 @@ public class Group implements Serializable {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    String groupID = new String();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         ArrayList<String> groupMembers = (ArrayList<String>) document.get("groupMembers");
                         int i = 0;
@@ -139,6 +145,7 @@ public class Group implements Serializable {
                             i++;
                         }
                         groupMembers.remove(i);
+                        groupID = document.getId();
                         groupMembersList.addAll(groupMembers);
                         DocumentReference groupDoc = db.collection("groups").document(document.getId());
                         //update field in groupMembers with new group members list
@@ -157,12 +164,14 @@ public class Group implements Serializable {
                                     }
                                 });
                     }
+                    db.collection("users").document(uid).update("groups", FieldValue.arrayRemove(groupID));
                 } else {
                     Log.d(TAG, "Error getting document: ", task.getException());
                     callBackFunction.error(task.getException());
                 }
             }
         });
+
     }
 
     public static void getGroupsFromReference(List<String> groupReferences, final Vector<Group> groupVector, final MultipleGroupsCallBackFunction multipleGroupsCallBackFunction) {
