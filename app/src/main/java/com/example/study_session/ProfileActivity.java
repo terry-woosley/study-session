@@ -81,6 +81,14 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
+    public void editProfile(View view){
+        Intent intent = new Intent(this, EditProfile.class);
+        intent.putExtra("uid", uid);
+        intent.putExtra("userName", username);
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
+
     public void getGroups(){
         DocumentReference docRef = db.collection("users").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

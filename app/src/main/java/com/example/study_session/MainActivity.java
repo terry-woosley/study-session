@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import com.example.study_session.ui.login.LoginActivity;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity{
