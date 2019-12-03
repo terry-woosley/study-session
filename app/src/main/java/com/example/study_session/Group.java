@@ -57,7 +57,7 @@ public class Group implements Serializable {
     }
 
     public void addNewGroup(final CallBackFunction callBackFunction){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> group = new HashMap<>();
         group.put("groupName", groupName);
@@ -72,6 +72,7 @@ public class Group implements Serializable {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        db.collection("users").document(groupCreator).update("groups", FieldValue.arrayUnion(documentReference.getId()));
                         callBackFunction.done();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
