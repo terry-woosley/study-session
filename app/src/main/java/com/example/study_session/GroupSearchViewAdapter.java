@@ -25,7 +25,7 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
         }
     }
 
-    private Vector<Group> groupVector;
+    public static Vector<Group> groupVector;
 
     public static Vector<Group> filteredGroupVector;
 

@@ -93,6 +93,7 @@ public class GroupSearchActivity extends AppCompatActivity {
         Group.getGroupsFromUniversity(school, GroupSearchViewAdapter.filteredGroupVector, new Group.CallBackFunction() {
             @Override
             public void done() {
+                GroupSearchViewAdapter.groupVector = GroupSearchViewAdapter.filteredGroupVector;
                 groupSearchViewAdapter.notifyDataSetChanged();
             }
             @Override
