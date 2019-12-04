@@ -29,6 +29,14 @@ public class MainActivity extends AppCompatActivity{
         startActivityForResult(login,LoginActivity.LOGIN_ACTIVITY);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        groups = new Vector<Group>();
+        bindGroupsRecyclerView();
+    }
+
+
     /**
      * Handles the result of either user login or registration
      *
