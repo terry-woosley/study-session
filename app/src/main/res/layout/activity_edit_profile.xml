@@ -15,32 +15,38 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/userNameView"
+            android:id="@+id/schoolView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center_vertical"
+            android:text="School Here"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/emailView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center_vertical"
+            android:text="Email Here"
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/changeNameBTN"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Change Username" />
+            android:text="Change Username"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/changeEmailBTN"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="Change Email" />
+            android:text="Change Email"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -60,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:onClick="updateInfo"
         android:text="@string/common_google_play_services_update_button"
         app:layout_constraintStart_toEndOf="@+id/changeInput"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />

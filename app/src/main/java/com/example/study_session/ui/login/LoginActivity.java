@@ -78,18 +78,18 @@ public class LoginActivity extends AppCompatActivity {
         checkBox = findViewById(R.id.rememberCheck);
 
         //Checks SharedPreferences for remembered user, logs user in if true
-//        if (sp.contains("isChecked")){
-//            if (sp.getBoolean("isChecked", false)){
-//                if (logout.getIntExtra("requestCode", 0) == LOGOUT){
-//                    Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_LONG).show();
-//                    unCheck(sp);
-//                }
-//                else {
-//                    restoreSharedPreferences(findViewById(R.id.container));
-//                    logUserIn(email, password);
-//                }
-//            }
-//        }
+        if (sp.contains("isChecked")){
+            if (sp.getBoolean("isChecked", false)){
+                if (logout.getIntExtra("requestCode", 0) == LOGOUT){
+                    Toast.makeText(getApplicationContext(), "Successfully Logged Out!", Toast.LENGTH_LONG).show();
+                    unCheck(sp);
+                }
+                else {
+                    restoreSharedPreferences(findViewById(R.id.container));
+                    logUserIn(email, password);
+                }
+            }
+        }
 
         //Listens for changes in the email field and updates error message if needed
         userEmailText.addTextChangedListener(new TextWatcher() {

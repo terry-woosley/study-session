@@ -34,6 +34,8 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseFirestore db;
     public static final int VIEW_PROFILE = 90;
+    public static final int EDIT_PROFILE = 91;
+    public static final int UPDATE_PROFILE = 92;
     private String school, username, email, uid;
     private ArrayList<String> availableTimes = new ArrayList<>();
     private ArrayList<String> groups = new ArrayList<>();
@@ -82,11 +84,25 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void editProfile(View view){
-        Intent intent = new Intent(this, EditProfile.class);
-        intent.putExtra("uid", uid);
-        intent.putExtra("userName", username);
-        intent.putExtra("email", email);
-        startActivity(intent);
+        Intent data = new Intent(this, EditProfile.class);
+        data.putExtra("uid", uid);
+        data.putExtra("school", school);
+        data.putExtra("email", email);
+        startActivityForResult(data, EDIT_PROFILE);
+    }
+
+    public void onActivityResult(int requestCode,int resultCode,Intent profile){
+        if (resultCode == UPDATE_PROFILE){
+            TextView schoolSet = findViewById(R.id.profileSchoolDisplayTV);
+            TextView emailSet = findViewById(R.id.profileEmailDisplayTV);
+
+            email = profile.getStringExtra("email");
+            school = profile.getStringExtra("school");
+
+            emailSet.setText(email);
+            schoolSet.setText(school);
+
+        }
     }
 
     public void getGroups(){

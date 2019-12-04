@@ -118,7 +118,7 @@ public class Group implements Serializable {
                                 }
                             });
                     }
-                    db.collection("users").document(uid).update("groups", FieldValue.arrayUnion(group.groupName));
+                    db.collection("users").document(uid).update("groups", FieldValue.arrayUnion(groupID));
                 } else {
                     Log.d(TAG, "Error getting document: ", task.getException());
                     callBackFunction.error(task.getException());
