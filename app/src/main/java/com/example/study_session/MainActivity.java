@@ -32,8 +32,19 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        groups = new Vector<Group>();
-        bindGroupsRecyclerView();
+        Profile.getUser(uid, new Profile.UserCallBackFunction() {
+            @Override
+            public void done(Profile user) {
+                userGroups = user.groups;
+                groups = new Vector<Group>();
+                bindGroupsRecyclerView();
+            }
+
+            @Override
+            public void error(Exception e) {
+
+            }
+        });
     }
 
 
@@ -58,7 +69,6 @@ public class MainActivity extends AppCompatActivity{
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
-            //Start add times/groups
         }
         else if (resultCode == LoginActivity.LOGOUT){
             Intent login = new Intent(this, LoginActivity.class);
@@ -96,7 +106,6 @@ public class MainActivity extends AppCompatActivity{
             });
 
         }
-        //TODO: both variables currently returning null
         Log.d("MAIN", "Current groups lists. userGroups: " + userGroups + " groups: " + groups);
     }
 
