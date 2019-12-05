@@ -5,10 +5,10 @@ This is the primary repo for the android application Study Session. This applica
 ## Development
 
 The development of this application is broken up into specific activities and features. Each contributor is responsible for completing their agreed portion of the application
-  * David Curtis: User Acount Registration, User login, cross activity data communication, and data input validation
+  * David Curtis: User Acount Registration, User login, cross activity data communication, data input validation/security 
   * Terry Woosley: Study Group management and main activity population
-  * Ronny Aretz: Study Group creation and management
-  * Dylan Rongey: User profile management
+  * Ronny Aretz: Study Group creation/join/searching and management
+  * Dylan Rongey: User profile page design
 
 ## Data Stroage
 
@@ -26,7 +26,7 @@ This application uses Cloud Firebase for all back-end services
 Use the following account information to login into the application (Testing purposes only)
 
  * Email: test@user.com
- * Password: TestPassword123!
+ * Password: Password123!
 
 ## Sequence Information
  * Login to the application using the above testing credentials
@@ -36,6 +36,9 @@ Use the following account information to login into the application (Testing pur
  
 ## Supported Devices
 This application can run on all Adroid devices running Nougat OS or newer
+
+## APK
+* App APK can be found in debug folder
 
 ## Built With
 
