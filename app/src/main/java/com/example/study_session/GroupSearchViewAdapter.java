@@ -63,7 +63,7 @@ public class GroupSearchViewAdapter extends RecyclerView.Adapter<GroupSearchView
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
 
-                String charString = constraint.toString();
+                String charString = constraint.toString().toLowerCase();
 
                 if (charString.isEmpty()){
                     filteredGroupVector = groupVector;
