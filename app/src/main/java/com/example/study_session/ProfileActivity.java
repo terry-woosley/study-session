@@ -40,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ArrayList<String> availableTimes = new ArrayList<>();
     private ArrayList<String> groups = new ArrayList<>();
     private Context context;
+    private GroupListAdapter groupListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,11 @@ public class ProfileActivity extends AppCompatActivity {
             TextView schoolSet = findViewById(R.id.profileSchoolDisplayTV);
             TextView nameSet = findViewById(R.id.profileNameDisplayTV);
             TextView emailSet = findViewById(R.id.profileEmailDisplayTV);
+            groupListAdapter = new GroupListAdapter();
+            RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
+            groupsRecycler.setAdapter(groupListAdapter);
+            LinearLayoutManager myManager = new LinearLayoutManager(context);
+            groupsRecycler.setLayoutManager(myManager);
             Intent intent = getIntent();
             populateProfile(intent);
 
@@ -106,32 +112,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void getGroups(){
-        DocumentReference docRef = db.collection("users").document(uid);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        Profile.getUser(uid, new Profile.UserCallBackFunction() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        groups = (ArrayList<String>) document.get("groups");
-                        if (groups != null){
-                            GroupListAdapter groupListAdapter = new GroupListAdapter(groups);
-                            RecyclerView groupsRecycler = findViewById(R.id.groupsRecycle);
-                            groupsRecycler.setAdapter(groupListAdapter);
-                            LinearLayoutManager myManager = new LinearLayoutManager(context);
-                            groupsRecycler.setLayoutManager(myManager);
-                            Log.d("Retrieving Groups", "Group data: " + groups.toString());
-                        }
-                        else {
-                            ArrayList<String> nullArray = new ArrayList<>();
-                            nullArray.add("No groups, join a few!");
-                        }
-                    } else {
-                        Log.d("Retrieving Groups", "No such document");
-                    }
-                } else {
-                    Log.d("Retrieving Groups", "get failed with ", task.getException());
-                }
+            public void done(Profile user) {
+                getGroupNames(user.groups);
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
     }
@@ -168,6 +157,23 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     Log.d("Retrieving Times", "get failed with ", task.getException());
                 }
+            }
+        });
+    }
+
+
+    public void getGroupNames(ArrayList<String> groups){
+        GroupListAdapter.preModel = new ArrayList<>();
+        Group.getGroupNames(groups, GroupListAdapter.preModel, new Group.CallBackFunction() {
+            @Override
+            public void done() {
+                GroupListAdapter.postModel = GroupListAdapter.preModel;
+                groupListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void error(Exception e) {
+
             }
         });
     }

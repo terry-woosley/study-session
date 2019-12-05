@@ -21,10 +21,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         }
     }
 
-    private ArrayList<String> model;
-    public GroupListAdapter(ArrayList<String> model) {
+    public static ArrayList<String> preModel;
+    public static ArrayList<String> postModel;
+
+    public GroupListAdapter() {
         super();
-        this.model = model;
+        this.preModel = new ArrayList<>();
+        postModel = new ArrayList<>();
     }
 
     @NonNull
@@ -37,11 +40,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
     }
 
     public void onBindViewHolder(@NonNull GroupListViewHolder holder, int position) {
-        holder.textView.setText(model.get(position));
+        holder.textView.setText(postModel.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return model.size();
+        return postModel.size();
     }
 }

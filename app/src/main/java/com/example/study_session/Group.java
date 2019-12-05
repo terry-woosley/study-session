@@ -243,6 +243,31 @@ public class Group implements Serializable {
         }
         */
     }
+
+    public static void getGroupNames(ArrayList<String> groupIds, final ArrayList<String> groupNames, final CallBackFunction callBackFunction){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        for (String uid : groupIds){
+            DocumentReference docRef = db.collection("groups").document(uid);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            groupNames.add(document.get("groupName").toString());
+
+                            Log.d("Getting group names", "Successful retrieval of group name: " + document.get("groupName").toString());
+                        } else {
+                            Log.d("Getting group names", "No such document");
+                        }
+                        callBackFunction.done();
+                    } else {
+                        Log.d("Getting group names", "get failed with ", task.getException());
+                    }
+                }
+            });
+        }
+    }
     
     public static void getGroupsFromUniversity(final String school, final Vector<Group> groupVector, final CallBackFunction callBackFunction){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
