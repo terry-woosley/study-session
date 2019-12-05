@@ -8,6 +8,7 @@ The development of this application is broken up into specific activities and fe
   * David Curtis: User Acount Registration, User login, cross activity data communication, data input validation/security 
   * Terry Woosley: Study Group management and main activity population
   * Ronny Aretz: Study Group creation/join/searching and management
+  ** DISCLAIMER Ronny does not show up as a contributor due to a git error, but his contributions can be clearly seen in commit history
   * Dylan Rongey: User profile page design
 
 ## Data Stroage
