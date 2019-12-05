@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import com.example.study_session.ui.login.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity{
     private String userName,school,uid;
     private ArrayList<String> userGroups;
     private Vector<Group> groups;
+    private boolean isLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +37,21 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        Profile.getUser(uid, new Profile.UserCallBackFunction() {
-            @Override
-            public void done(Profile user) {
-                userGroups = user.groups;
-                groups = new Vector<Group>();
-                bindGroupsRecyclerView();
-            }
+        if (isLoggedIn) {
+            Profile.getUser(uid, new Profile.UserCallBackFunction() {
+                @Override
+                public void done(Profile user) {
+                    userGroups = user.groups;
+                    groups = new Vector<Group>();
+                    bindGroupsRecyclerView();
+                }
 
-            @Override
-            public void error(Exception e) {
+                @Override
+                public void error(Exception e) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
 
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity{
     public void onActivityResult(int requestCode,int resultCode,Intent profile){
         if(resultCode == LoginActivity.LOGIN_SUCCESS){
             setContentView(R.layout.activity_main);
+            isLoggedIn = true;
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
@@ -66,6 +74,7 @@ public class MainActivity extends AppCompatActivity{
         }
         else if(resultCode == LoginActivity.SUCCESSFUL_REGISTRATION){
             setContentView(R.layout.activity_main);
+            isLoggedIn = true;
             userName = profile.getStringExtra("userName");
             school = profile.getStringExtra("school");
             uid = profile.getStringExtra("uid");
@@ -73,6 +82,7 @@ public class MainActivity extends AppCompatActivity{
         else if (resultCode == LoginActivity.LOGOUT){
             Intent login = new Intent(this, LoginActivity.class);
             login.putExtra("requestCode",LoginActivity.LOGOUT );
+            isLoggedIn = false;
             startActivityForResult(login,LoginActivity.LOGOUT);
         }
 

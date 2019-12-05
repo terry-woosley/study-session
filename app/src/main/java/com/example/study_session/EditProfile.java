@@ -16,9 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.regex.Pattern;
 
@@ -117,7 +121,7 @@ public class EditProfile extends AppCompatActivity {
             updateEmail(changeInput);
         }
         else if (schoolFlag){
-
+            updatesSchool(changeInput);
         }
         else {
             Toast.makeText(getApplicationContext(), "Please select a field to update", Toast.LENGTH_SHORT).show();
@@ -148,7 +152,30 @@ public class EditProfile extends AppCompatActivity {
         }
     }
 
-    public void updateUsername(EditText input){
+    public void updatesSchool(EditText input){
+        final String newSchool = input.getText().toString();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("users").document(uid);
+        userRef
+                .update("school", newSchool)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Updating School", "User school successfully updated!");
+                        Toast.makeText(getApplicationContext(), "Changed email to "+ newSchool, Toast.LENGTH_SHORT).show();
+                        TextView schoolView = findViewById(R.id.schoolView);
+                        school = newSchool;
+                        String schoolString = "Current University: " + school;
+                        schoolView.setText(schoolString);
+                        changeFlag = true;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Updating School", "Error updating user school", e);
+                    }
+                });
 
     }
 

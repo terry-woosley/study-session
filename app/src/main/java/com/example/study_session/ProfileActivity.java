@@ -115,7 +115,9 @@ public class ProfileActivity extends AppCompatActivity {
         Profile.getUser(uid, new Profile.UserCallBackFunction() {
             @Override
             public void done(Profile user) {
-                getGroupNames(user.groups);
+                if(user.groups != null){
+                    getGroupNames(user.groups);
+                }
             }
 
             @Override
